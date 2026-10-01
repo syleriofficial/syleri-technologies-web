@@ -1,4 +1,4 @@
-import { products } from "@/content/products";
+import { categoryName, productPath, type Product } from "@/content/products";
 import { site } from "@/content/site";
 
 /** Organization — factual fields only (no logo, address, founders or social profiles until supplied). */
@@ -23,33 +23,38 @@ export const websiteSchema = {
 };
 
 /**
- * Product schema for Stockline. One real offer: $49 USD via Lemon Squeezy.
- * No ratings or reviews — none exist yet.
+ * Product schema built from a product record. An Offer is included only when
+ * the product is available with a real price and checkout. Never adds ratings
+ * or reviews.
  */
-export function stocklineProductSchema() {
-  const p = products.find((x) => x.slug === "stockline")!;
+export function productSchema(p: Product) {
+  const url = `${site.url}${productPath(p)}`;
+  const offer =
+    p.status === "available" && p.price && p.checkoutUrl
+      ? {
+          "@type": "Offer",
+          name: p.price.offerName,
+          price: p.price.amount.toFixed(2),
+          priceCurrency: p.price.currency,
+          availability: "https://schema.org/InStock",
+          url: p.checkoutUrl,
+          seller: { "@id": `${site.url}/#organization` },
+        }
+      : undefined;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": `${site.url}${p.href}#product`,
+    "@id": `${url}#product`,
     name: p.name,
-    description:
-      "POS & inventory management dashboard for Next.js — a frontend starter kit built with Next.js, React and TypeScript.",
-    category: "Developer Tool / Frontend Starter Kit",
-    url: `${site.url}${p.href}`,
-    sku: "stockline-standard",
+    description: p.schema.description,
+    category: p.schema.category || categoryName(p.category),
+    url,
+    ...(p.schema.sku ? { sku: p.schema.sku } : {}),
     brand: { "@type": "Brand", name: site.name },
     manufacturer: { "@id": `${site.url}/#organization` },
     additionalProperty: [{ "@type": "PropertyValue", name: "Version", value: p.version }],
-    offers: {
-      "@type": "Offer",
-      name: "Stockline Standard License",
-      price: "49.00",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      url: p.checkoutUrl,
-      seller: { "@id": `${site.url}/#organization` },
-    },
+    ...(offer ? { offers: offer } : {}),
   };
 }
 
@@ -64,4 +69,12 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
       item: `${site.url}${item.path}`,
     })),
   };
+}
+
+export function productBreadcrumb(p: Product) {
+  return breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/products" },
+    { name: p.name, path: productPath(p) },
+  ]);
 }

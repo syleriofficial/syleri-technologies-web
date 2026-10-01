@@ -1,4 +1,5 @@
-import type { ScreenshotKey } from "./stockline-screenshots";
+import type { ProductMedia } from "../types";
+import { stocklineMedia } from "./media";
 
 /**
  * Stockline sales-page content. Copy describes only what is stated in the
@@ -10,7 +11,7 @@ export type StocklineModule = {
   id: string;
   name: string;
   description: string;
-  shot?: ScreenshotKey;
+  media?: ProductMedia;
 };
 
 /** Modules 3–11 of the sales page (POS and Dashboard have their own sections). */
@@ -19,13 +20,13 @@ export const modules: StocklineModule[] = [
     id: "products",
     name: "Products",
     description: "Screens for managing your product catalog — the records every sale, purchase and stock movement refers to.",
-    shot: "products",
+    media: stocklineMedia.products,
   },
   {
     id: "inventory",
     name: "Inventory",
     description: "Screens for viewing and managing stock levels across your catalog.",
-    shot: "inventory",
+    media: stocklineMedia.inventory,
   },
   {
     id: "warehouses",
@@ -36,7 +37,7 @@ export const modules: StocklineModule[] = [
     id: "purchasing",
     name: "Purchasing & suppliers",
     description: "Screens for purchasing and for managing the suppliers you buy from.",
-    shot: "purchasing",
+    media: stocklineMedia.purchasing,
   },
   {
     id: "sales",
@@ -47,7 +48,7 @@ export const modules: StocklineModule[] = [
     id: "reports",
     name: "Reports",
     description: "Reporting screens with charts built on Recharts, ready to be fed from your own data.",
-    shot: "reports",
+    media: stocklineMedia.reports,
   },
   {
     id: "customers",
@@ -59,7 +60,7 @@ export const modules: StocklineModule[] = [
     name: "Roles & permissions",
     description:
       "An interface for defining roles and what each role can access. Enforcing permissions for real requires your own backend and authentication.",
-    shot: "roles",
+    media: stocklineMedia.roles,
   },
   {
     id: "settings",

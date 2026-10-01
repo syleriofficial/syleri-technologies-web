@@ -1,21 +1,15 @@
 import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
-import { Screenshot } from "@/components/screenshot";
+import { ProductImage } from "@/components/product-image";
 import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
-import { stockline } from "@/content/products";
-import { audiences, disclosureExclusions, faqs, included, modules, pricingIncludes } from "@/content/stockline";
-import { pageMetadata } from "@/lib/metadata";
-import { breadcrumbSchema, stocklineProductSchema } from "@/lib/schema";
+import { stockline } from "@/content/products/stockline";
+import { stocklineMedia as media } from "@/content/products/stockline/media";
+import { audiences, disclosureExclusions, faqs, included, modules, pricingIncludes } from "@/content/products/stockline/sales";
+import { productMetadata } from "@/lib/metadata";
+import { productBreadcrumb, productSchema } from "@/lib/schema";
 
-export const metadata = pageMetadata({
-  title: "Stockline — POS & Inventory Management Next.js Dashboard",
-  description:
-    "Build POS and inventory software faster with Stockline, a premium Next.js and TypeScript frontend starter kit for sales, stock, warehouses, purchasing, reports, customers, roles and more.",
-  path: "/products/stockline",
-  absoluteTitle: true,
-  ogImage: null,
-});
+export const metadata = productMetadata(stockline);
 
 const CHECKOUT = stockline.checkoutUrl!;
 const DEMO = stockline.demoUrl!;
@@ -50,16 +44,7 @@ function CrossIcon() {
 export default function StocklinePage() {
   return (
     <>
-      <JsonLd
-        data={[
-          stocklineProductSchema(),
-          breadcrumbSchema([
-            { name: "Home", path: "/" },
-            { name: "Products", path: "/products" },
-            { name: "Stockline", path: "/products/stockline" },
-          ]),
-        ]}
-      />
+      <JsonLd data={[productSchema(stockline), productBreadcrumb(stockline)]} />
 
       {/* Hero */}
       <section aria-labelledby="stockline-title">
@@ -136,7 +121,7 @@ export default function StocklinePage() {
             title="POS terminal"
             intro="A point-of-sale interface for building a cart and working through a sale — the starting point for counter, retail and quick-service workflows that you connect to your own backend and payment provider."
           />
-          <Screenshot name="pos" priority className="mt-10" sizes="(min-width: 1216px) 1152px, 100vw" />
+          <ProductImage media={media.pos} priority className="mt-10" sizes="(min-width: 1216px) 1152px, 100vw" />
         </Container>
       </Section>
 
@@ -148,7 +133,7 @@ export default function StocklinePage() {
             title="Dashboard"
             intro="An overview screen with charts built on Recharts, giving your users a clear first view of their operation."
           />
-          <Screenshot name="dashboard" sizes="(min-width: 1024px) 66vw, 100vw" />
+          <ProductImage media={media.dashboard} sizes="(min-width: 1024px) 66vw, 100vw" />
         </Container>
       </Section>
 
@@ -180,7 +165,7 @@ export default function StocklinePage() {
                   <h3 className="type-h3">{m.name}</h3>
                   <p className="mt-2 max-w-[46ch] leading-relaxed text-muted">{m.description}</p>
                 </div>
-                {m.shot ? <Screenshot name={m.shot} sizes="(min-width: 768px) 55vw, 100vw" /> : null}
+                {m.media ? <ProductImage media={m.media} sizes="(min-width: 768px) 55vw, 100vw" /> : null}
               </li>
             ))}
           </ul>
@@ -190,7 +175,7 @@ export default function StocklinePage() {
       {/* 12. Themes */}
       <Section id="themes" labelledBy="themes-title">
         <Container className="grid items-center gap-10 lg:grid-cols-[minmax(0,8fr)_minmax(0,4fr)] lg:gap-14">
-          <Screenshot name="dark" sizes="(min-width: 1024px) 66vw, 100vw" className="order-2 lg:order-1" />
+          <ProductImage media={media.dark} sizes="(min-width: 1024px) 66vw, 100vw" className="order-2 lg:order-1" />
           <SectionHeading
             id="themes-title"
             title="Light and dark themes"

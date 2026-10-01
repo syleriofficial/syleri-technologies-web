@@ -24,7 +24,9 @@ export type Update = {
   body: string[];
   /** Optional bulleted facts shown after the body. */
   highlights?: string[];
+  /** Links the entry to a product. Its product page and demo links are added automatically. */
   productSlug?: string;
+  /** Extra links beyond the product's own. */
   links?: { label: string; href: string; external?: boolean }[];
 };
 
@@ -47,10 +49,6 @@ export const updates: Update[] = [
       "Standard License: one commercial end product or one client project",
     ],
     productSlug: "stockline",
-    links: [
-      { label: "Stockline product page", href: "/products/stockline" },
-      { label: "Live demo", href: "https://stockline-demo.vercel.app/", external: true },
-    ],
   },
 ];
 
@@ -61,6 +59,11 @@ export const updateKindLabel: Record<UpdateKind, string> = {
 
 export function getUpdate(slug: string) {
   return updates.find((u) => u.slug === slug);
+}
+
+/** Most recent release for a product (entries are kept newest first). */
+export function latestRelease(productSlug: string) {
+  return updates.find((u) => u.kind === "release" && u.productSlug === productSlug);
 }
 
 export function formatDate(iso: string) {

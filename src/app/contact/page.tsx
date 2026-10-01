@@ -2,7 +2,6 @@ import { JsonLd } from "@/components/json-ld";
 import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container } from "@/components/ui/layout";
 import { Notice } from "@/components/ui/notice";
-import { STOCKLINE_DEMO_URL } from "@/content/products";
 import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -14,8 +13,8 @@ export const metadata = pageMetadata({
 });
 
 const topics = [
-  { title: "Product questions", body: "Questions about Stockline's scope, technology or fit for your project before you buy." },
-  { title: "Licensing", body: "Questions about the Standard License, including use across more than one product or client project." },
+  { title: "Product questions", body: "Questions about a product's scope, technology or fit for your project before you buy." },
+  { title: "Licensing", body: "Questions about a product license, including use beyond what a license covers." },
   { title: "Orders", body: "Help with an existing purchase made through Lemon Squeezy checkout." },
 ];
 
@@ -56,11 +55,8 @@ export default function ContactPage() {
                     working contact form on this site — we do not collect messages we cannot answer.
                   </p>
                   <p className="mt-2">
-                    In the meantime, you can explore Stockline in the{" "}
-                    <TextLink href={STOCKLINE_DEMO_URL} newTab>
-                      live demo
-                    </TextLink>{" "}
-                    or read the <TextLink href="/products/stockline#faq">Stockline FAQ</TextLink>.
+                    In the meantime, each <TextLink href="/products">product page</TextLink> covers scope, technology,
+                    pricing and licensing, and links to a live demo where one is available.
                   </p>
                 </Notice>
               )}

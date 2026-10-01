@@ -3,7 +3,8 @@ import { ProductFeature } from "@/components/product-feature";
 import { ProductLedger } from "@/components/product-ledger";
 import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
-import { products, stockline } from "@/content/products";
+import { focusAreas } from "@/content/catalog";
+import { developerProducts, featuredProducts, getProduct, productPath, products, productsInArea } from "@/content/products";
 import { site } from "@/content/site";
 import { formatDate, updateKindLabel, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
@@ -14,19 +15,6 @@ export const metadata = pageMetadata({
   path: "/",
   absoluteTitle: true,
 });
-
-const focusAreas = [
-  {
-    title: "Developer products",
-    body: "Starter kits, components and tools that give engineering teams a working, well-structured foundation instead of a blank repository.",
-    examples: [stockline],
-  },
-  {
-    title: "Operational software",
-    body: "Software for the day-to-day work of running a business — selling, stocking, purchasing and reporting — where clarity matters more than novelty.",
-    examples: [stockline],
-  },
-];
 
 const principles = [
   {
@@ -47,7 +35,12 @@ const principles = [
   },
 ];
 
+/** How many products the hero index shows before linking to /products. */
+const HERO_INDEX_LIMIT = 5;
+
 export default function HomePage() {
+  const featured = featuredProducts();
+  const devProducts = developerProducts().slice(0, 3);
   const latest = updates.slice(0, 3);
 
   return (
@@ -74,29 +67,33 @@ export default function HomePage() {
                 </ButtonLink>
               </div>
             </div>
-            <ProductLedger items={products} headingId="hero-index" />
+            <ProductLedger items={products} headingId="hero-index" limit={HERO_INDEX_LIMIT} compact />
           </div>
         </Container>
       </section>
 
       {/* 2. Featured products */}
-      <Section labelledBy="featured-title">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading
-              id="featured-title"
-              title="Featured product"
-              intro="Stockline is the first commercial product from Syleri Technologies."
-            />
-            <TextLink href="/products" className="text-[0.9375rem]">
-              All products
-            </TextLink>
-          </div>
-          <div className="mt-10">
-            <ProductFeature product={stockline} shot="pos" primaryLabel="Explore Stockline" />
-          </div>
-        </Container>
-      </Section>
+      {featured.length ? (
+        <Section labelledBy="featured-title">
+          <Container>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading
+                id="featured-title"
+                title={featured.length === 1 ? "Featured product" : "Featured products"}
+                intro="Selected from the Syleri Technologies catalog."
+              />
+              <TextLink href="/products" className="text-[0.9375rem]">
+                All products
+              </TextLink>
+            </div>
+            <div className="mt-10 space-y-8">
+              {featured.map((p) => (
+                <ProductFeature key={p.slug} product={p} primaryLabel={`Explore ${p.name}`} />
+              ))}
+            </div>
+          </Container>
+        </Section>
+      ) : null}
 
       {/* 3. What we build */}
       <Section labelledBy="build-title" tone="surface">
@@ -107,51 +104,74 @@ export default function HomePage() {
             intro="Two areas of focus, connected by the same standard of engineering."
           />
           <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2">
-            {focusAreas.map((area) => (
-              <div key={area.title} className="flex flex-col bg-raised p-6 sm:p-8">
-                <h3 className="type-h3">{area.title}</h3>
-                <p className="mt-3 leading-relaxed text-muted">{area.body}</p>
-                <p className="mt-6 border-t border-line pt-4 text-[0.9375rem] text-muted md:mt-auto">
-                  Available now:{" "}
-                  {area.examples.map((p) => (
-                    <Link key={p.slug} href={p.href} className="font-[560] text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
-                      {p.name}
-                    </Link>
-                  ))}
-                </p>
-              </div>
-            ))}
+            {focusAreas.map((area) => {
+              const inArea = productsInArea(area.id);
+              return (
+                <div key={area.id} className="flex flex-col bg-raised p-6 sm:p-8">
+                  <h3 className="type-h3">{area.title}</h3>
+                  <p className="mt-3 leading-relaxed text-muted">{area.body}</p>
+                  {inArea.length ? (
+                    <div className="mt-6 border-t border-line pt-4 text-[0.9375rem] text-muted md:mt-auto">
+                      <span>Available now: </span>
+                      <ul className="inline">
+                        {inArea.slice(0, 4).map((p, i) => (
+                          <li key={p.slug} className="inline">
+                            {i > 0 ? ", " : null}
+                            <Link href={productPath(p)} className="font-[560] text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
+                              {p.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      {inArea.length > 4 ? <span> and {inArea.length - 4} more</span> : null}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         </Container>
       </Section>
 
       {/* 4. Developers */}
-      <Section labelledBy="dev-title">
-        <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <SectionHeading
-              id="dev-title"
-              title="For developers who read the source"
-              intro="Our developer products ship as complete, readable source code on a modern, widely used stack — yours to study, adapt and build on."
-            />
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/developers" variant="secondary">
-                Visit the developer hub
-              </ButtonLink>
+      {devProducts.length ? (
+        <Section labelledBy="dev-title">
+          <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <SectionHeading
+                id="dev-title"
+                title="For developers who read the source"
+                intro="Our developer products ship as complete, readable source code on modern, widely used stacks — yours to study, adapt and build on."
+              />
+              <div className="mt-8">
+                <ButtonLink href="/developers" variant="secondary">
+                  Visit the developer hub
+                </ButtonLink>
+              </div>
             </div>
-          </div>
-          <div className="overflow-hidden rounded-2xl border border-line">
-            <h3 className="relative z-10 border-b border-line bg-bg px-6 py-3.5 text-[0.9375rem] font-[620]">Stockline is built with</h3>
-            <ul className="-mt-px grid grid-cols-2 gap-x-6 px-6 pb-1 sm:grid-cols-3">
-              {stockline.technology.map((t) => (
-                <li key={t} className="border-t border-line py-3.5 text-[0.9375rem] text-ink-soft">
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Container>
-      </Section>
+            <div className="overflow-hidden rounded-2xl border border-line">
+              <h3 className="border-b border-line px-6 py-3.5 text-[0.9375rem] font-[620]">Developer products</h3>
+              <ul>
+                {devProducts.map((p) => (
+                  <li key={p.slug} className="border-b border-line px-6 py-5 last:border-b-0">
+                    <Link href={productPath(p)} className="font-[620] text-ink hover:text-accent">
+                      {p.name}
+                    </Link>
+                    <p className="text-[0.9375rem] text-muted">{p.subtitle}</p>
+                    <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${p.name} technology`}>
+                      {p.technology.map((t) => (
+                        <li key={t} className="rounded-md border border-line px-2 py-0.5 text-[0.8125rem] text-ink-soft">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Container>
+        </Section>
+      ) : null}
 
       {/* 5. Principles */}
       <Section labelledBy="principles-title" tone="surface">
@@ -169,38 +189,44 @@ export default function HomePage() {
       </Section>
 
       {/* 6. Latest updates */}
-      <Section labelledBy="updates-title">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading id="updates-title" title="Latest updates" />
-            <TextLink href="/updates" className="text-[0.9375rem]">
-              All updates
-            </TextLink>
-          </div>
-          <ul className="mt-10 border-t border-line">
-            {latest.map((u) => (
-              <li key={u.slug} className="border-b border-line">
-                <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8">
-                  <span className="text-[0.9375rem] text-muted">
-                    {updateKindLabel[u.kind]}
-                    {u.date ? (
-                      <>
-                        <br className="hidden sm:block" />
-                        <span className="sm:hidden">, </span>
-                        <time dateTime={u.date}>{formatDate(u.date)}</time>
-                      </>
-                    ) : null}
-                  </span>
-                  <span>
-                    <span className="block text-lg font-[620] tracking-[-0.01em] group-hover:text-accent">{u.title}</span>
-                    <span className="mt-1 block text-muted">{u.summary}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
+      {latest.length ? (
+        <Section labelledBy="updates-title">
+          <Container>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading id="updates-title" title="Latest updates" />
+              <TextLink href="/updates" className="text-[0.9375rem]">
+                All updates
+              </TextLink>
+            </div>
+            <ul className="mt-10 border-t border-line">
+              {latest.map((u) => {
+                const product = u.productSlug ? getProduct(u.productSlug) : undefined;
+                return (
+                  <li key={u.slug} className="border-b border-line">
+                    <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8">
+                      <span className="text-[0.9375rem] text-muted">
+                        {updateKindLabel[u.kind]}
+                        {product ? <span>, {product.name}</span> : null}
+                        {u.date ? (
+                          <>
+                            <br className="hidden sm:block" />
+                            <span className="sm:hidden">, </span>
+                            <time dateTime={u.date}>{formatDate(u.date)}</time>
+                          </>
+                        ) : null}
+                      </span>
+                      <span>
+                        <span className="block text-lg font-[620] tracking-[-0.01em] group-hover:text-accent">{u.title}</span>
+                        <span className="mt-1 block text-muted">{u.summary}</span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </Container>
+        </Section>
+      ) : null}
 
       {/* 7. Final CTA */}
       <section aria-labelledby="cta-title" className="border-t border-line">

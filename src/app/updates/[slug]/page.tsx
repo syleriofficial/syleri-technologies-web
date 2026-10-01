@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { TextLink } from "@/components/ui/button-link";
 import { Container } from "@/components/ui/layout";
+import { getProduct, productPath } from "@/content/products";
 import { site } from "@/content/site";
 import { formatDate, getUpdate, updateKindLabel, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
@@ -28,6 +29,14 @@ export default async function UpdatePage({ params }: Props) {
   const { slug } = await params;
   const u = getUpdate(slug);
   if (!u) notFound();
+
+  // Product links come from the product record, so they never go stale.
+  const product = u.productSlug ? getProduct(u.productSlug) : undefined;
+  const links = [
+    ...(product && product.status !== "retired" ? [{ label: `${product.name} product page`, href: productPath(product), external: false }] : []),
+    ...(product?.demoUrl ? [{ label: `${product.name} live demo`, href: product.demoUrl, external: true }] : []),
+    ...(u.links ?? []).map((l) => ({ ...l, external: !!l.external })),
+  ];
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -96,9 +105,9 @@ export default async function UpdatePage({ params }: Props) {
             ) : null}
           </div>
 
-          {u.links?.length ? (
+          {links.length ? (
             <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 text-[0.9375rem]">
-              {u.links.map((l) => (
+              {links.map((l) => (
                 <li key={l.href}>
                   <TextLink href={l.href} newTab={l.external}>
                     {l.label}

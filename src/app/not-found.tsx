@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Container } from "@/components/ui/layout";
+import { productPath, products } from "@/content/products";
 
 export const metadata = { title: "Page not found", alternates: { canonical: null } };
 
@@ -21,9 +22,20 @@ export default function NotFound() {
           Go to home page
         </ButtonLink>
       </div>
-      <p className="mt-10 text-[0.9375rem] text-muted">
-        Looking for Stockline? <Link href="/products/stockline" className="text-ink underline underline-offset-4">Go to the Stockline page</Link>.
-      </p>
+      {products.length ? (
+        <nav aria-label="Products" className="mt-12 max-w-md">
+          <h2 className="text-[0.9375rem] font-[620]">Products</h2>
+          <ul className="mt-3 border-t border-line">
+            {products.slice(0, 5).map((p) => (
+              <li key={p.slug} className="border-b border-line">
+                <Link href={productPath(p)} className="block py-3 text-[0.9375rem] text-ink hover:text-accent">
+                  {p.name} <span className="text-muted">— {p.subtitle}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
     </Container>
   );
 }

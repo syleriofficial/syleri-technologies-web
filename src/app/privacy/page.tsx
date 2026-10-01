@@ -42,12 +42,12 @@ export default function PrivacyPage() {
 
       <h2>Purchases and third-party sites</h2>
       <p>
-        When you select a purchase button for a product such as Stockline, you leave this website for a checkout page
+        When you select a purchase button for a product, you leave this website for a checkout page
         operated by Lemon Squeezy. Lemon Squeezy processes your order and payment details under its own terms and privacy
         policy. Syleri Technologies does not receive or store your full payment card details through this website.
       </p>
       <p>
-        Product demos, such as the Stockline live demo, run on separate websites. Other sites we link to have their own
+        Product live demos run on separate websites. Other sites we link to have their own
         privacy practices, and we encourage you to review them.
       </p>
 

@@ -1,6 +1,20 @@
 import { ImageResponse } from "next/og";
+import { categoryName, type Product } from "@/content/products";
 
 export const ogSize = { width: 1200, height: 630 };
+
+/** Social card for any product, built from its record. */
+export function productOgImage(p: Product) {
+  return ogCard({
+    kicker: `${p.name} v${p.version}`,
+    title: p.subtitle,
+    subtitle: [categoryName(p.category), ...p.technology.slice(0, 3)].join(" · "),
+  });
+}
+
+export function productOgAlt(p: Product) {
+  return `${p.name} — ${p.subtitle}`;
+}
 
 /** Text-only social card. No product UI is drawn — only real words. */
 export function ogCard({ kicker, title, subtitle }: { kicker: string; title: string; subtitle: string }) {

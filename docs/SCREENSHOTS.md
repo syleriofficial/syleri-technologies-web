@@ -12,8 +12,8 @@ public/products/stockline/screenshots/
 
 | # | File name                  | What it must show                         | Used on                                  |
 |---|----------------------------|-------------------------------------------|------------------------------------------|
-| 1 | `01-pos-cart.png`          | POS terminal with a filled cart           | Home (featured product), Stockline POS   |
-| 2 | `02-dashboard-light.png`   | Dashboard, light theme                    | /products, Stockline Dashboard           |
+| 1 | `01-pos-cart.png`          | POS terminal with a filled cart           | Home & /products (cover), Stockline POS  |
+| 2 | `02-dashboard-light.png`   | Dashboard, light theme                    | Stockline Dashboard                      |
 | 3 | `03-inventory.png`         | Inventory screen                          | Stockline modules                        |
 | 4 | `04-products.png`          | Products screen                           | Stockline modules                        |
 | 5 | `05-purchasing.png`        | Purchasing screen                         | Stockline modules                        |
@@ -31,6 +31,6 @@ public/products/stockline/screenshots/
   private URLs visible.
 - PNG is fine — Next.js serves optimized AVIF/WebP automatically.
 - If a screenshot shows something different from the description, update its
-  `alt` text in `src/content/stockline-screenshots.ts`.
+  `alt` text in `src/content/products/stockline/media.ts`.
 
 After adding files, rebuild (`npm run build`) — detection happens at build time.

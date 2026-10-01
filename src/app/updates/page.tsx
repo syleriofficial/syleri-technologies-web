@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { Container } from "@/components/ui/layout";
+import { getProduct } from "@/content/products";
 import { formatDate, updateKindLabel, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -25,11 +26,19 @@ export default function UpdatesPage() {
         <p className="type-lead mt-5 max-w-[52ch]">Product releases and company announcements, newest first.</p>
 
         <ol className="mt-14 border-t border-line" aria-label="All updates">
-          {updates.map((u) => (
+          {updates.map((u) => {
+            const product = u.productSlug ? getProduct(u.productSlug) : undefined;
+            return (
             <li key={u.slug} className="border-b border-line">
               <article className="grid gap-2 py-8 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-10">
                 <p className="text-[0.9375rem] text-muted">
                   {updateKindLabel[u.kind]}
+                  {product ? (
+                    <>
+                      <br />
+                      {product.name}
+                    </>
+                  ) : null}
                   {u.date ? (
                     <>
                       <br />
@@ -48,12 +57,13 @@ export default function UpdatesPage() {
                     href={`/updates/${u.slug}`}
                     className="mt-4 inline-block text-[0.9375rem] text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent"
                   >
-                    Read release notes<span className="sr-only"> for {u.title}</span>
+                    {u.kind === "release" ? "Read release notes" : "Read announcement"}<span className="sr-only"> for {u.title}</span>
                   </Link>
                 </div>
               </article>
             </li>
-          ))}
+            );
+          })}
         </ol>
       </Container>
     </>

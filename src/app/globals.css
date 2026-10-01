@@ -202,9 +202,18 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 0.25rem 1.5rem;
   }
+  .ledger-row-compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem 1.5rem;
+  }
   @media (min-width: 48rem) {
     .ledger-row {
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 6rem 7.5rem;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 6rem 9rem;
+      align-items: baseline;
+    }
+    .ledger-row-compact {
+      grid-template-columns: minmax(0, 1fr) 9rem;
       align-items: baseline;
     }
   }

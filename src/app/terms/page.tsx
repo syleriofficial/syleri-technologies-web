@@ -23,7 +23,7 @@ export default function TermsPage() {
 
       <h2>Products and licenses</h2>
       <p>
-        Your use of any Syleri Technologies product, such as Stockline, is governed by the license that applies to that
+        Your use of any Syleri Technologies product is governed by the license that applies to that
         product. Product pages on this website summarize license terms for convenience; where a summary and the product
         license differ, the product license applies.
       </p>

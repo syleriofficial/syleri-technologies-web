@@ -66,9 +66,8 @@ export default function CompanyPage() {
               We are an early-stage software company that designs and develops software products and developer tools.
             </p>
             <p className="max-w-[52ch] leading-relaxed text-muted">
-              Our first commercial product is Stockline, a POS and inventory management dashboard for Next.js. We intend
-              to grow a portfolio of products over time, and we would rather earn trust through the quality of each
-              release than through claims about scale.
+              We are building a portfolio of products over time and release each one when it is ready to be relied
+              on. We would rather earn trust through the quality of each release than through claims about scale.
             </p>
           </div>
         </Container>
@@ -79,7 +78,7 @@ export default function CompanyPage() {
           <SectionHeading
             id="what-title"
             title="What we build"
-            intro="Software products and developer tools for teams that build and run real operations. Today that means one product; the catalog grows as each new product is ready."
+            intro="Software products and developer tools for teams that build and run real operations. The catalog grows as each new product is ready."
           />
           <ProductLedger items={products} headingId="company-index" heading="Current products" />
         </Container>

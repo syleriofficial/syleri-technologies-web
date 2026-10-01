@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productPath, type Product } from "@/content/products";
 import { site } from "@/content/site";
 
 const DEFAULT_OG_IMAGE = {
@@ -56,4 +57,18 @@ export function pageMetadata({
     },
     robots: noindex ? { index: false, follow: true } : undefined,
   };
+}
+
+/**
+ * Metadata for a product page, from its record. The product's own
+ * opengraph-image route supplies the social image.
+ */
+export function productMetadata(p: Product): Metadata {
+  return pageMetadata({
+    title: p.seo.title,
+    description: p.seo.description,
+    path: productPath(p),
+    absoluteTitle: true,
+    ogImage: null,
+  });
 }

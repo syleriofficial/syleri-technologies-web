@@ -1,41 +1,47 @@
 import Link from "next/link";
-import { products, STOCKLINE_DEMO_URL } from "@/content/products";
+import { developerProducts, productPath, products } from "@/content/products";
 import { site } from "@/content/site";
 import { Wordmark } from "./site-header";
 import { Container } from "./ui/layout";
 
 type FooterLink = { label: string; href: string; external?: boolean };
 
-const groups: { title: string; links: FooterLink[] }[] = [
-  {
-    title: "Products",
-    links: products.map((p) => ({ label: p.name, href: p.href })),
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "Company", href: "/company" },
-      { label: "Updates", href: "/updates" },
-      { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    title: "Developers",
-    links: [
-      { label: "Developers", href: "/developers" },
-      { label: "Stockline Demo", href: STOCKLINE_DEMO_URL, external: true },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy", href: "/privacy" },
-      { label: "Terms", href: "/terms" },
-    ],
-  },
-];
+/** Caps keep the footer balanced as the catalog grows; the overflow goes to a "view all" link. */
+const MAX_PRODUCT_LINKS = 6;
+const MAX_DEMO_LINKS = 3;
+
+function buildGroups(): { title: string; links: FooterLink[] }[] {
+  const productLinks: FooterLink[] = products.slice(0, MAX_PRODUCT_LINKS).map((p) => ({ label: p.name, href: productPath(p) }));
+  if (products.length > MAX_PRODUCT_LINKS) productLinks.push({ label: "All products", href: "/products" });
+
+  const demoLinks: FooterLink[] = developerProducts()
+    .filter((p) => p.demoUrl)
+    .slice(0, MAX_DEMO_LINKS)
+    .map((p) => ({ label: `${p.name} Demo`, href: p.demoUrl!, external: true }));
+
+  return [
+    { title: "Products", links: productLinks.length ? productLinks : [{ label: "All products", href: "/products" }] },
+    {
+      title: "Company",
+      links: [
+        { label: "Company", href: "/company" },
+        { label: "Updates", href: "/updates" },
+        { label: "Contact", href: "/contact" },
+      ],
+    },
+    { title: "Developers", links: [{ label: "Developers", href: "/developers" }, ...demoLinks] },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy", href: "/privacy" },
+        { label: "Terms", href: "/terms" },
+      ],
+    },
+  ];
+}
 
 export function SiteFooter() {
+  const groups = buildGroups();
   return (
     <footer className="border-t border-line bg-surface">
       <Container className="py-14 sm:py-16">
