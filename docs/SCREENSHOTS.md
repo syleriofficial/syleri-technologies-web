@@ -1,8 +1,10 @@
 # Stockline screenshots
 
 The Stockline sales page, the home page and the products page use **real
-screenshots only**. Until each file below exists, the site renders a clearly
-labelled "Screenshot pending" frame in its place — never a mock UI.
+screenshots only**, captured from the unmodified `syleriofficial/stockline-demo`
+production build with `scripts/capture-stockline-screenshots.py`. If a file is
+ever missing, the site renders a labelled "Screenshot pending" frame in its
+place — never a mock UI.
 
 Put the files in:
 
@@ -19,13 +21,14 @@ public/products/stockline/screenshots/
 | 5 | `05-purchasing.png`        | Purchasing screen                         | Stockline modules                        |
 | 6 | `06-reports.png`           | Reports screen                            | Stockline modules                        |
 | 7 | `07-roles-permissions.png` | Roles & permissions screen                | Stockline modules                        |
-| 8 | `08-dark-mode.png`         | Any primary screen in the dark theme      | Stockline themes                         |
+| 8 | `08-dark-mode.png`         | Dashboard, dark theme                     | Stockline themes                         |
 
 ## Capture guidelines
 
-- Capture from the real Stockline build at a **1440×900** browser viewport
-  with a device pixel ratio of 2 (output **2880×1800**, 16:10). Frames are
-  16:10 and crop from the top, so keep important UI near the top.
+- Capture from the real Stockline production build at a **1600×1000** browser
+  viewport with a device pixel ratio of 1.8 (output **2880×1800**, 16:10).
+  Frames crop from the top, so keep important UI near the top.
+- POS: several products in the cart so subtotal, tax and total are visible.
 - Light theme for 1–7, dark theme for 8.
 - Browser chrome cropped out; no personal data, real customer data or
   private URLs visible.

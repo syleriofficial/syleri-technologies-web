@@ -35,8 +35,7 @@ export const updates: Update[] = [
     slug: "stockline-1-0-0",
     title: "Stockline 1.0.0",
     kind: "release",
-    // CONFIGURATION NEEDED: supply the confirmed release date.
-    date: null,
+    date: "2026-09-30",
     summary: "Initial commercial release of Stockline, a POS and inventory management dashboard for Next.js.",
     body: [
       "Stockline 1.0.0 is the first commercial release from Syleri Technologies. It is a frontend starter kit for teams building retail, inventory, warehouse, purchasing and sales software on Next.js and TypeScript.",

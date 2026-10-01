@@ -50,7 +50,8 @@ sitemap. Set `productSlug` to link it to a product.
 ## Configuration still needed before launch
 
 - `site.contact.email` in `src/content/site.ts` — a verified public contact address.
-- Stockline 1.0.0 release date in `src/content/updates.ts`.
-- Real Stockline screenshots — see [`docs/SCREENSHOTS.md`](docs/SCREENSHOTS.md).
 - Official logo (the favicon in `src/app/icon.tsx` is a placeholder letter mark).
-- Public Stockline documentation URL, if one is published (`docs.url` in `src/content/products/stockline/index.ts`).
+
+Not required for launch: Stockline documentation is included with purchase;
+there is no public docs URL. If one is published later, set `docs.url` in
+`src/content/products/stockline/index.ts`.

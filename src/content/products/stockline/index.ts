@@ -30,8 +30,8 @@ export const stockline: Product = {
     summary: "One commercial end product or one client project.",
   },
   docs: {
-    // CONFIGURATION NEEDED: add the public documentation URL once published.
-    note: "Included with your purchase. A public online version has not been published yet.",
+    // No public documentation URL exists yet. Do not add one until it is published.
+    note: "Documentation included with purchase.",
   },
   cover: stocklineMedia.pos,
   seo: {
