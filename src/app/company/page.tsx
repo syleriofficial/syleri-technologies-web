@@ -1,51 +1,32 @@
+import { JsonLd } from "@/components/json-ld";
+import { ProductLedger } from "@/components/product-ledger";
 import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
-import { ProductLedger } from "@/components/product-ledger";
-import { JsonLd } from "@/components/json-ld";
-import { products } from "@/content/products";
+import { focusAreas } from "@/content/catalog";
+import { engineeringPrinciples, productPrinciples } from "@/content/company";
+import { productPath, products, productsInArea } from "@/content/products";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata = pageMetadata({
   title: "Company",
   description:
-    "Syleri Technologies is an early-stage software company that designs and develops software products and developer tools.",
+    "Syleri Technologies is a software company that designs and develops software products and developer tools.",
   path: "/company",
 });
 
-const productPhilosophy = [
-  {
-    title: "Complete, not partial",
-    body: "A product should do its job end to end within its stated scope. If something is out of scope, we say so plainly on the product page.",
-  },
-  {
-    title: "Honest descriptions",
-    body: "We describe what ships today. Limitations, requirements and license terms are visible before purchase, not discovered after.",
-  },
-  {
-    title: "Try before you commit",
-    body: "Where it makes sense, products come with a live demo so you can judge the work directly.",
-  },
-];
-
-const engineeringPrinciples = [
-  {
-    title: "Typed throughout",
-    body: "TypeScript and consistent structure make a codebase safer to change, for us and for the developers who build on our products.",
-  },
-  {
-    title: "Accessible baseline",
-    body: "Semantic markup, keyboard support and readable contrast are requirements of a finished product.",
-  },
-  {
-    title: "Fewer dependencies",
-    body: "We choose well-maintained, widely used libraries and avoid adding what a product does not need.",
-  },
-  {
-    title: "Performance as a feature",
-    body: "Fast pages and responsive interfaces are part of quality, not a later optimization pass.",
-  },
-];
+function PrincipleList({ items }: { items: { title: string; body: string }[] }) {
+  return (
+    <div className={`mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 ${items.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
+      {items.map((p) => (
+        <div key={p.title} className="border-t-2 border-ink pt-5">
+          <h3 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h3>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function CompanyPage() {
   return (
@@ -63,24 +44,48 @@ export default function CompanyPage() {
           </h1>
           <div className="mt-8 grid gap-6 lg:grid-cols-2 lg:gap-16">
             <p className="type-lead max-w-[40ch]">
-              We are an early-stage software company that designs and develops software products and developer tools.
+              A software company that designs and develops software products and developer tools.
             </p>
             <p className="max-w-[52ch] leading-relaxed text-muted">
-              We are building a portfolio of products over time and release each one when it is ready to be relied
-              on. We would rather earn trust through the quality of each release than through claims about scale.
+              We are building a portfolio of products across several areas of work, and we release each one when it is
+              ready to be relied on. We would rather earn trust through the quality of each release than through claims
+              about scale.
             </p>
           </div>
         </Container>
       </section>
 
       <Section labelledBy="what-title">
-        <Container className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <Container>
           <SectionHeading
             id="what-title"
             title="What we build"
-            intro="Software products and developer tools for teams that build and run real operations. The catalog grows as each new product is ready."
+            intro="Software for teams that build and run real operations. These are the areas we work in."
           />
-          <ProductLedger items={products} headingId="company-index" heading="Current products" />
+          <ul className="mt-10 border-t border-line">
+            {focusAreas.map((area) => {
+              const inArea = productsInArea(area.id);
+              return (
+                <li key={area.id} className="grid gap-3 border-b border-line py-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-12">
+                  <h3 className="type-h3">{area.title}</h3>
+                  <div>
+                    <p className="max-w-[60ch] leading-relaxed text-ink-soft">{area.body}</p>
+                    {inArea.length ? (
+                      <p className="mt-3 text-[0.9375rem] text-muted">
+                        Available now:{" "}
+                        {inArea.map((p, i) => (
+                          <span key={p.slug}>
+                            {i > 0 ? ", " : null}
+                            <TextLink href={productPath(p)}>{p.name}</TextLink>
+                          </span>
+                        ))}
+                      </p>
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </Container>
       </Section>
 
@@ -93,10 +98,9 @@ export default function CompanyPage() {
               business depends on — and work to make them simpler to build and to use.
             </p>
             <p>
-              We release products when they are ready to be relied on, document them, and keep their public descriptions
-              accurate as they change. Release notes for every product are published on our{" "}
-              <TextLink href="/updates">updates page</TextLink>
-              .
+              Each product is a complete thing in its own right, with its own page, documentation and release notes.
+              Public descriptions are kept accurate as products change, and every release is recorded on our{" "}
+              <TextLink href="/updates">updates page</TextLink>.
             </p>
           </div>
         </Container>
@@ -105,32 +109,29 @@ export default function CompanyPage() {
       <Section labelledBy="philosophy-title">
         <Container>
           <SectionHeading id="philosophy-title" title="Product philosophy" />
-          <div className="mt-10 grid gap-x-10 gap-y-10 md:grid-cols-3">
-            {productPhilosophy.map((p) => (
-              <div key={p.title} className="border-t-2 border-ink pt-5">
-                <h3 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h3>
-                <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
-              </div>
-            ))}
-          </div>
+          <PrincipleList items={productPrinciples} />
         </Container>
       </Section>
 
       <Section labelledBy="engineering-title" tone="surface">
         <Container>
           <SectionHeading id="engineering-title" title="Engineering principles" />
-          <div className="mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {engineeringPrinciples.map((p) => (
-              <div key={p.title} className="border-t-2 border-ink pt-5">
-                <h3 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h3>
-                <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
-              </div>
-            ))}
-          </div>
+          <PrincipleList items={engineeringPrinciples} />
         </Container>
       </Section>
 
-      <section aria-labelledby="company-cta" className="border-t border-line">
+      <Section labelledBy="products-title">
+        <Container className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <SectionHeading
+            id="products-title"
+            title="Products"
+            intro="The current Syleri Technologies product line. New products are added as they are released."
+          />
+          <ProductLedger items={products} headingId="company-index" heading="Current products" footnote={null} limit={6} compact />
+        </Container>
+      </Section>
+
+      <section aria-labelledby="company-cta" className="border-t border-line bg-surface">
         <Container className="py-20 sm:py-24">
           <h2 id="company-cta" className="type-h2 max-w-[24ch]">
             Explore our products, or get in touch.

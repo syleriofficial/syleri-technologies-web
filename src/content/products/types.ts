@@ -24,6 +24,12 @@ export type Product = {
   slug: string;
   name: string;
   category: CategoryId;
+  /**
+   * What form the product takes, in plain words — e.g. "Frontend starter kit",
+   * "Web application", "Desktop app", "Library", "API". Lets the catalog hold
+   * any kind of product, not only developer templates.
+   */
+  kind: string;
   /** One-line positioning statement shown under the name. */
   subtitle: string;
   /** Short paragraph used on cards, rows and the template page. */
@@ -44,7 +50,13 @@ export type Product = {
   /** Listed in the developer hub and the footer's Developers column. */
   forDevelopers: boolean;
 
-  technology: string[];
+  /** Technologies the product is built with. Shown for developer-facing products; optional otherwise. */
+  technology?: string[];
+  /**
+   * Up to ~6 factual feature highlights. Rendered by the shared product
+   * page template; custom pages may ignore them.
+   */
+  highlights?: { title: string; body: string }[];
   demoUrl?: string;
   /** External checkout. Opens in the same tab. */
   checkoutUrl?: string;

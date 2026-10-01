@@ -5,6 +5,7 @@ export const stockline: Product = {
   slug: "stockline",
   name: "Stockline",
   category: "developer-tools",
+  kind: "Frontend starter kit",
   subtitle: "POS & Inventory Management Dashboard for Next.js",
   summary:
     "A production-quality frontend starter kit for building retail, inventory, warehouse, purchasing, sales and operational software.",
@@ -12,7 +13,7 @@ export const stockline: Product = {
   status: "available",
   page: "custom",
   featured: true,
-  areas: ["developer-products", "operational-software"],
+  areas: ["business-operations", "developer-tools"],
   forDevelopers: true,
   technology: ["Next.js 16", "React", "TypeScript", "Tailwind CSS", "Radix UI", "Recharts", "Lucide"],
   demoUrl: "https://stockline-demo.vercel.app/",

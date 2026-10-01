@@ -8,7 +8,7 @@ export function productOgImage(p: Product) {
   return ogCard({
     kicker: `${p.name} v${p.version}`,
     title: p.subtitle,
-    subtitle: [categoryName(p.category), ...p.technology.slice(0, 3)].join(" · "),
+    subtitle: [categoryName(p.category), p.kind, ...(p.technology ?? []).slice(0, 2)].join(" · "),
   });
 }
 

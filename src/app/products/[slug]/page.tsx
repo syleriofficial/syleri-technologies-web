@@ -109,13 +109,30 @@ export default async function ProductTemplatePage({ params }: Props) {
         </Section>
       ) : null}
 
-      <Section labelledBy="details-title">
+      {p.highlights?.length ? (
+        <Section labelledBy="highlights-title">
+          <Container>
+            <SectionHeading id="highlights-title" title={`What ${p.name} does`} />
+            <ul className="mt-10 grid gap-x-10 gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-3">
+              {p.highlights.map((h) => (
+                <li key={h.title}>
+                  <h3 className="font-[620] text-ink">{h.title}</h3>
+                  <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{h.body}</p>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      ) : null}
+
+      <Section labelledBy="details-title" tone={p.highlights?.length ? "surface" : "base"}>
         <Container className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <SectionHeading id="details-title" title="Details" />
           <dl className="divide-y divide-line border-y border-line">
             {[
               ["Category", categoryName(p.category)],
-              ["Technology", p.technology.join(", ")],
+              ["Type", p.kind],
+              ...(p.technology?.length ? [["Technology", p.technology.join(", ")]] : []),
               ...(p.license ? [["License", `${p.license.name}: ${p.license.summary}`]] : []),
               ...(p.docs ? [["Documentation", p.docs.url ? null : p.docs.note]] : []),
             ].map(([term, desc]) => (

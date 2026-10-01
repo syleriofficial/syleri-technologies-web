@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ProductFeature } from "@/components/product-feature";
-import { ProductLedger } from "@/components/product-ledger";
+import { ProductCard, ProductFeature } from "@/components/product-feature";
 import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { focusAreas } from "@/content/catalog";
-import { developerProducts, featuredProducts, getProduct, productPath, products, productsInArea } from "@/content/products";
+import { companyStatement, engineeringPrinciples, productPrinciples } from "@/content/company";
+import { developerProducts, featuredProducts, getProduct, productPath, products, productsInArea, type Product } from "@/content/products";
 import { site } from "@/content/site";
 import { formatDate, updateKindLabel, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
@@ -16,81 +16,113 @@ export const metadata = pageMetadata({
   absoluteTitle: true,
 });
 
-const principles = [
-  {
-    title: "Say exactly what it does",
-    body: "Product pages describe what ships today, including what is not included. No inflated claims, no invented metrics.",
-  },
-  {
-    title: "Typed and maintainable",
-    body: "TypeScript throughout, consistent structure and readable code, so the people who extend our products can do so with confidence.",
-  },
-  {
-    title: "Accessible by default",
-    body: "Semantic markup, keyboard support and sufficient contrast are part of the baseline, not an afterthought.",
-  },
-  {
-    title: "Useful from the first run",
-    body: "Products should be clear to evaluate and quick to start with: a live demo where possible, documentation with every release.",
-  },
-];
-
-/** How many products the hero index shows before linking to /products. */
-const HERO_INDEX_LIMIT = 5;
+function ProductNames({ items, max = 3 }: { items: Product[]; max?: number }) {
+  const shown = items.slice(0, max);
+  return (
+    <>
+      {shown.map((p, i) => (
+        <span key={p.slug}>
+          {i > 0 ? ", " : null}
+          <Link href={productPath(p)} className="text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
+            {p.name}
+          </Link>
+        </span>
+      ))}
+      {items.length > max ? <span> and {items.length - max} more</span> : null}
+    </>
+  );
+}
 
 export default function HomePage() {
-  const featured = featuredProducts();
-  const devProducts = developerProducts().slice(0, 3);
-  const latest = updates.slice(0, 3);
+  const [lead, ...moreFeatured] = featuredProducts();
+  const available = products.filter((p) => p.status === "available");
+  const latestRelease = updates.find((u) => u.kind === "release");
+  const devProducts = developerProducts();
+  const withDocs = devProducts.filter((p) => p.docs);
+  const withDemos = products.filter((p) => p.demoUrl);
+  const releases = updates.filter((u) => u.kind === "release");
+  const latestUpdates = updates.slice(0, 3);
 
   return (
     <>
-      {/* 1. Hero */}
+      {/* 1. Company hero */}
       <section aria-labelledby="hero-title" className="border-b border-line">
-        <Container className="pb-16 pt-14 sm:pb-24 sm:pt-20 lg:pt-28">
-          <p className="text-[0.9375rem] font-[560] text-accent">Syleri Technologies</p>
-          <h1 id="hero-title" className="type-display mt-4 max-w-[17ch]">
-            Technology products built to make complex work simpler.
+        <Container className="pt-14 sm:pt-20 lg:pt-28">
+          <p className="text-[0.9375rem] font-[560] text-accent">{site.name}</p>
+          <h1 id="hero-title" className="type-display mt-5 max-w-[16ch]">
+            {companyStatement.headline}
           </h1>
-          <div className="mt-10 grid gap-12 lg:mt-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-            <div>
-              <p className="type-lead max-w-[38ch]">
-                We design and develop software products and developer tools — carefully engineered, honestly described
-                and built to be put to work.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/products" size="lg">
-                  Explore products
-                </ButtonLink>
-                <ButtonLink href="/company" size="lg" variant="secondary">
-                  About Syleri Technologies
-                </ButtonLink>
-              </div>
+          <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-16">
+            <p className="type-lead max-w-[52ch]">{companyStatement.lead}</p>
+            <div className="flex flex-wrap gap-3 lg:justify-end">
+              <ButtonLink href="/products" size="lg">
+                Explore products
+              </ButtonLink>
+              <ButtonLink href="/company" size="lg" variant="secondary">
+                About Syleri Technologies
+              </ButtonLink>
             </div>
-            <ProductLedger items={products} headingId="hero-index" limit={HERO_INDEX_LIMIT} compact />
           </div>
+
+          {/* Company profile: facts only, derived from content. */}
+          <dl className="mt-14 grid border-t border-line sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+            <div className="border-b border-line py-6 sm:pr-6 lg:border-b-0 lg:border-r">
+              <dt className="text-[0.875rem] text-muted">What we build</dt>
+              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">Software products and developer tools</dd>
+            </div>
+            <div className="border-b border-line py-6 sm:pl-6 lg:border-b-0 lg:border-r lg:px-6">
+              <dt className="text-[0.875rem] text-muted">Focus areas</dt>
+              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">{focusAreas.map((a) => a.title).join(", ")}</dd>
+            </div>
+            <div className="border-b border-line py-6 sm:border-b-0 sm:pr-6 lg:border-r lg:px-6">
+              <dt className="text-[0.875rem] text-muted">Available products</dt>
+              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">
+                {available.length ? <ProductNames items={available} /> : "—"}
+              </dd>
+            </div>
+            <div className="py-6 sm:pl-6">
+              <dt className="text-[0.875rem] text-muted">Latest release</dt>
+              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">
+                {latestRelease ? (
+                  <Link
+                    href={`/updates/${latestRelease.slug}`}
+                    className="text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent"
+                  >
+                    {latestRelease.title}
+                  </Link>
+                ) : (
+                  "—"
+                )}
+              </dd>
+            </div>
+          </dl>
         </Container>
       </section>
 
       {/* 2. Featured products */}
-      {featured.length ? (
+      {lead ? (
         <Section labelledBy="featured-title">
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeading
                 id="featured-title"
-                title={featured.length === 1 ? "Featured product" : "Featured products"}
-                intro="Selected from the Syleri Technologies catalog."
+                title={moreFeatured.length ? "Featured products" : "Featured product"}
+                intro="Selected from the Syleri Technologies product line."
               />
               <TextLink href="/products" className="text-[0.9375rem]">
                 All products
               </TextLink>
             </div>
-            <div className="mt-10 space-y-8">
-              {featured.map((p) => (
-                <ProductFeature key={p.slug} product={p} primaryLabel={`Explore ${p.name}`} />
-              ))}
+            <div className="mt-10">
+              <ProductFeature product={lead} mode="explore" priority />
             </div>
+            {moreFeatured.length ? (
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                {moreFeatured.map((p) => (
+                  <ProductCard key={p.slug} product={p} />
+                ))}
+              </div>
+            ) : null}
           </Container>
         </Section>
       ) : null}
@@ -100,96 +132,120 @@ export default function HomePage() {
         <Container>
           <SectionHeading
             id="build-title"
-            title="What Syleri Technologies builds"
-            intro="Two areas of focus, connected by the same standard of engineering."
+            title="What we build"
+            intro="Syleri Technologies works across the areas below. Each lists only what is available today."
           />
-          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-2">
+          <ul className="mt-12 border-t border-line">
             {focusAreas.map((area) => {
               const inArea = productsInArea(area.id);
               return (
-                <div key={area.id} className="flex flex-col bg-raised p-6 sm:p-8">
+                <li key={area.id} className="grid gap-3 border-b border-line py-8 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-12">
                   <h3 className="type-h3">{area.title}</h3>
-                  <p className="mt-3 leading-relaxed text-muted">{area.body}</p>
-                  {inArea.length ? (
-                    <div className="mt-6 border-t border-line pt-4 text-[0.9375rem] text-muted md:mt-auto">
-                      <span>Available now: </span>
-                      <ul className="inline">
-                        {inArea.slice(0, 4).map((p, i) => (
-                          <li key={p.slug} className="inline">
-                            {i > 0 ? ", " : null}
-                            <Link href={productPath(p)} className="font-[560] text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
-                              {p.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      {inArea.length > 4 ? <span> and {inArea.length - 4} more</span> : null}
-                    </div>
-                  ) : null}
-                </div>
+                  <div>
+                    <p className="max-w-[60ch] leading-relaxed text-ink-soft">{area.body}</p>
+                    {inArea.length ? (
+                      <p className="mt-3 text-[0.9375rem] text-muted">
+                        Available now: <ProductNames items={inArea} max={4} />
+                      </p>
+                    ) : null}
+                  </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </Container>
       </Section>
 
-      {/* 4. Developers */}
-      {devProducts.length ? (
-        <Section labelledBy="dev-title">
-          <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <SectionHeading
-                id="dev-title"
-                title="For developers who read the source"
-                intro="Our developer products ship as complete, readable source code on modern, widely used stacks — yours to study, adapt and build on."
-              />
-              <div className="mt-8">
-                <ButtonLink href="/developers" variant="secondary">
-                  Visit the developer hub
-                </ButtonLink>
-              </div>
+      {/* 4. Developer ecosystem */}
+      <Section labelledBy="dev-title">
+        <Container className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div>
+            <SectionHeading
+              id="dev-title"
+              title="Developer ecosystem"
+              intro="Documentation, live demos, release notes and source code for our developer products, gathered in one hub that grows with every release."
+            />
+            <div className="mt-8">
+              <ButtonLink href="/developers" variant="secondary">
+                Visit the developer hub
+              </ButtonLink>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-line">
-              <h3 className="border-b border-line px-6 py-3.5 text-[0.9375rem] font-[620]">Developer products</h3>
-              <ul>
-                {devProducts.map((p) => (
-                  <li key={p.slug} className="border-b border-line px-6 py-5 last:border-b-0">
-                    <Link href={productPath(p)} className="font-[620] text-ink hover:text-accent">
-                      {p.name}
-                    </Link>
-                    <p className="text-[0.9375rem] text-muted">{p.subtitle}</p>
-                    <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${p.name} technology`}>
-                      {p.technology.map((t) => (
-                        <li key={t} className="rounded-md border border-line px-2 py-0.5 text-[0.8125rem] text-ink-soft">
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
+          </div>
+          <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2">
+            <div className="bg-raised p-6">
+              <dt className="font-[620]">Developer products</dt>
+              <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                {devProducts.length ? <ProductNames items={devProducts} /> : "None released yet"}
+              </dd>
+            </div>
+            <div className="bg-raised p-6">
+              <dt className="font-[620]">Documentation</dt>
+              <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                {withDocs.length ? <>Provided with <ProductNames items={withDocs} /></> : "Published with each developer product"}
+              </dd>
+            </div>
+            <div className="bg-raised p-6">
+              <dt className="font-[620]">Live demos</dt>
+              <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                {withDemos.length ? <>Try <ProductNames items={withDemos} /> in your browser</> : "Offered where a product can run in the browser"}
+              </dd>
+            </div>
+            <div className="bg-raised p-6">
+              <dt className="font-[620]">Release notes</dt>
+              <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                {releases.length ? (
+                  <>
+                    <Link href="/updates" className="text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
+                      {releases.length} {releases.length === 1 ? "release" : "releases"}
+                    </Link>{" "}
+                    documented
+                  </>
+                ) : (
+                  "Published with every release"
+                )}
+              </dd>
+            </div>
+          </dl>
+        </Container>
+      </Section>
+
+      {/* 5. Product & engineering principles */}
+      <Section labelledBy="principles-title" tone="surface">
+        <Container>
+          <SectionHeading
+            id="principles-title"
+            title="How we build"
+            intro="The standards every Syleri Technologies product is held to, whatever it does."
+          />
+          <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,4fr)] lg:gap-16">
+            <div>
+              <h3 className="text-[0.9375rem] font-[620] text-muted">Product</h3>
+              <ul className="mt-4 border-t-2 border-ink">
+                {productPrinciples.map((p) => (
+                  <li key={p.title} className="border-b border-line py-5">
+                    <h4 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h4>
+                    <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
                   </li>
                 ))}
               </ul>
             </div>
-          </Container>
-        </Section>
-      ) : null}
-
-      {/* 5. Principles */}
-      <Section labelledBy="principles-title" tone="surface">
-        <Container>
-          <SectionHeading id="principles-title" title="How we work" />
-          <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {principles.map((p) => (
-              <div key={p.title} className="border-t-2 border-ink pt-5">
-                <h3 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h3>
-                <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
-              </div>
-            ))}
+            <div>
+              <h3 className="text-[0.9375rem] font-[620] text-muted">Engineering</h3>
+              <ul className="mt-4 grid border-t-2 border-ink sm:grid-cols-2 sm:gap-x-8">
+                {engineeringPrinciples.map((p) => (
+                  <li key={p.title} className="border-b border-line py-5">
+                    <h4 className="text-[1.0625rem] font-[640] tracking-[-0.01em]">{p.title}</h4>
+                    <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{p.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </Container>
       </Section>
 
       {/* 6. Latest updates */}
-      {latest.length ? (
+      {latestUpdates.length ? (
         <Section labelledBy="updates-title">
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
@@ -199,11 +255,11 @@ export default function HomePage() {
               </TextLink>
             </div>
             <ul className="mt-10 border-t border-line">
-              {latest.map((u) => {
+              {latestUpdates.map((u) => {
                 const product = u.productSlug ? getProduct(u.productSlug) : undefined;
                 return (
                   <li key={u.slug} className="border-b border-line">
-                    <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8">
+                    <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-6 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-8">
                       <span className="text-[0.9375rem] text-muted">
                         {updateKindLabel[u.kind]}
                         {product ? <span>, {product.name}</span> : null}
@@ -228,18 +284,23 @@ export default function HomePage() {
         </Section>
       ) : null}
 
-      {/* 7. Final CTA */}
-      <section aria-labelledby="cta-title" className="border-t border-line">
-        <Container className="py-20 sm:py-28">
-          <h2 id="cta-title" className="type-title max-w-[20ch]">
-            See what we&rsquo;ve built, and what we&rsquo;re building next.
-          </h2>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href="/products" size="lg">
-              Explore products
+      {/* 7. Company CTA */}
+      <section aria-labelledby="cta-title" className="border-t border-line bg-surface">
+        <Container className="grid gap-10 py-20 sm:py-28 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-16">
+          <div>
+            <h2 id="cta-title" className="type-title max-w-[18ch]">
+              Get to know Syleri Technologies.
+            </h2>
+            <p className="type-lead mt-5 max-w-[48ch]">
+              How we work, what we focus on and the standards behind every product.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3 lg:justify-end">
+            <ButtonLink href="/company" size="lg">
+              About the company
             </ButtonLink>
             <ButtonLink href="/contact" size="lg" variant="secondary">
-              Contact us
+              Contact
             </ButtonLink>
           </div>
         </Container>

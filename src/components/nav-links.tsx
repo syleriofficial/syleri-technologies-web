@@ -19,12 +19,12 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`relative inline-flex h-10 items-center rounded-[0.625rem] px-3 text-[0.9375rem] transition-colors hover:text-ink ${
+              className={`relative inline-flex h-10 items-center rounded-[0.625rem] px-2.5 lg:px-3 text-[0.9375rem] transition-colors hover:text-ink ${
                 active ? "font-[580] text-ink" : "text-muted"
               }`}
             >
               {item.label}
-              {active ? <span aria-hidden="true" className="absolute inset-x-3 -bottom-[0.6875rem] h-0.5 bg-accent" /> : null}
+              {active ? <span aria-hidden="true" className="absolute inset-x-2.5 lg:inset-x-3 -bottom-[0.6875rem] h-0.5 bg-accent" /> : null}
             </Link>
           </li>
         );

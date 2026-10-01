@@ -16,17 +16,19 @@ export const myProduct: Product = {
   slug: "my-product",              // URL: /products/my-product
   name: "My Product",
   category: "developer-tools",     // an id from src/content/catalog.ts
+  kind: "Web application",         // what form it takes: app, starter kit, library, API…
   subtitle: "One-line positioning statement",
   summary: "One or two factual sentences about what it is.",
   version: "1.0.0",
   status: "available",             // "available" | "in-development" | "retired"
   page: "template",                // "template" or "custom" (see step 3)
   featured: false,                 // true = highlighted on home + top of its category
-  areas: ["developer-products"],   // ids from focusAreas in catalog.ts
-  forDevelopers: true,             // listed in /developers and footer demos
-  technology: ["TypeScript"],
+  areas: ["business-operations"],  // ids from focusAreas in catalog.ts
+  forDevelopers: false,            // true = listed in /developers and footer demos
 
   // Optional — include only what is real:
+  technology: ["TypeScript"],      // shown for developer-facing products
+  highlights: [{ title: "…", body: "…" }],  // feature sections on the template page
   demoUrl: "https://…",
   checkoutUrl: "https://…",        // requires price
   price: { currency: "USD", amount: 29, label: "$29", offerName: "My Product License" },
@@ -82,13 +84,20 @@ custom page exists.
 
 | Products | Home | /products |
 |----------|------|-----------|
-| 1–2 | Product index lists all; featured panel(s) | Category section(s) with featured panel; no directory table |
-| 3+ | Index shows first 5 + "View all" | Adds counts and a directory table (desktop); category jump links when 2+ categories |
-| Many | Up to 3 featured panels | Featured products as panels, the rest as compact rows per category |
+| 1–2 | Company hero lists available products; one featured panel | Category section(s) with featured panel; no directory table |
+| 3+ | Hero lists first 3 "and N more"; extra featured products as cards | Adds counts and a directory table (desktop); category jump links when 2+ categories |
+| Many | One lead panel + up to 2 featured cards | Featured products as panels, the rest as compact rows per category |
 
 The footer lists up to 6 products (then "All products") and up to 3 demos.
 Retired products are hidden from listings but their records remain for
 old update links.
 
+## Where purchase buttons appear
+
+Purchase buttons appear only in product cards on `/products` and on the
+product's own page — never in the home page hero or home page product
+cards, which lead to the product page instead.
+
 Do not add placeholder or future products to fill space — only real
-products belong in the registry.
+products belong in the registry. Products are not limited to developer
+tools: any kind of product fits the same record.

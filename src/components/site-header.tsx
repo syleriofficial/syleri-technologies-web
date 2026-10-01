@@ -7,7 +7,7 @@ import { Container } from "./ui/layout";
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
-    <span className={`text-[1.0625rem] font-[680] tracking-[-0.02em] ${className}`}>
+    <span className={`whitespace-nowrap text-[1.0625rem] font-[680] tracking-[-0.02em] ${className}`}>
       Syleri <span className="font-[450] text-muted">Technologies</span>
     </span>
   );

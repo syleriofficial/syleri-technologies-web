@@ -126,7 +126,7 @@ export default function ProductsPage() {
               {featured.length ? (
                 <div className="mt-10 space-y-8">
                   {featured.map((p, i) => (
-                    <ProductFeature key={p.slug} product={p} primaryLabel="View product" showFacts priority={gi === 0 && i === 0} />
+                    <ProductFeature key={p.slug} product={p} mode="catalog" priority={gi === 0 && i === 0} />
                   ))}
                 </div>
               ) : null}
