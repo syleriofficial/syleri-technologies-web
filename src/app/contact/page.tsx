@@ -1,5 +1,4 @@
 import { JsonLd } from "@/components/json-ld";
-import { ButtonLink, TextLink } from "@/components/ui/button-link";
 import { Container } from "@/components/ui/layout";
 import { Notice } from "@/components/ui/notice";
 import { site } from "@/content/site";
@@ -18,9 +17,10 @@ const topics = [
   { title: "Orders", body: "Help with an existing purchase made through Lemon Squeezy checkout." },
 ];
 
-export default function ContactPage() {
-  const email = site.contact.email;
+/** Shown while no secure contact form is configured. No email address is ever published. */
+const CONTACT_STATUS = "Contact options are being finalized. Product customers can use the support channel provided with their purchase.";
 
+export default function ContactPage() {
   return (
     <>
       <JsonLd
@@ -34,30 +34,16 @@ export default function ContactPage() {
           <div>
             <h1 className="type-title">Contact</h1>
             <p className="type-lead mt-5 max-w-[44ch]">
-              Questions about our products, licensing or an order? Here is how to reach Syleri Technologies.
+              Questions about our products, licensing or an order? This is where to reach Syleri Technologies.
             </p>
 
             <div className="mt-10">
-              {email ? (
-                <div className="rounded-2xl border border-line bg-raised p-6 sm:p-8">
-                  <h2 className="type-h3">Email</h2>
-                  <p className="mt-2 text-muted">We read every message and reply by email.</p>
-                  <p className="mt-5">
-                    <ButtonLink href={`mailto:${email}`} size="lg">
-                      {email}
-                    </ButtonLink>
-                  </p>
-                </div>
+              {site.contact.formEnabled ? (
+                // Slot for the future secure contact form (see `site.contact` in src/content/site.ts).
+                null
               ) : (
-                <Notice title="Contact channel not yet configured" tone="config" role="status">
-                  <p>
-                    A public contact address for Syleri Technologies has not been published yet. Until it is, there is no
-                    working contact form on this site — we do not collect messages we cannot answer.
-                  </p>
-                  <p className="mt-2">
-                    In the meantime, each <TextLink href="/products">product page</TextLink> covers scope, technology,
-                    pricing and licensing, and links to a live demo where one is available.
-                  </p>
+                <Notice title="Current status" role="status">
+                  <p>{CONTACT_STATUS}</p>
                 </Notice>
               )}
             </div>
@@ -76,7 +62,7 @@ export default function ContactPage() {
               ))}
             </ul>
             <p className="mt-6 text-[0.875rem] leading-relaxed text-muted">
-              Payments are processed by Lemon Squeezy. Never send card details or passwords by email.
+              Payments are processed by Lemon Squeezy. Never share card details or passwords outside the checkout page.
             </p>
           </section>
         </div>

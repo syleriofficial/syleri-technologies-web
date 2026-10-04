@@ -14,16 +14,21 @@ export const site = {
   copyrightYear: 2026,
 
   /**
-   * Public contact destination.
+   * Contact configuration.
    *
-   * CONFIGURATION NEEDED: no verified public contact address has been
-   * supplied yet. While `email` is null the contact page shows a clear
-   * "not yet configured" state and no mailto links are rendered anywhere.
-   * Set this to a verified, monitored address (e.g. a domain mailbox on
-   * syleritechnologies.com) before launch.
+   * Policy: the site never publishes an email address — not in page copy,
+   * mailto links, metadata, JSON-LD or client-side JavaScript. Do not add one.
+   *
+   * `formEnabled` is the switch for a future secure contact form. Keep it
+   * false until a server-side handler exists (a Next.js route handler or
+   * server action that validates input, applies spam protection and
+   * delivers messages without exposing the destination mailbox). Then set it
+   * to true and render the form in the slot marked in
+   * src/app/contact/page.tsx. While false, the Contact page shows a neutral
+   * status message and no form.
    */
   contact: {
-    email: null as string | null,
+    formEnabled: false as boolean,
   },
 } as const;
 

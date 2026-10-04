@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy"
-      updated="2026-10-01"
+      updated="2026-10-04"
       intro="This page explains what information the Syleri Technologies website handles. We have kept the site simple so that the answer is short."
     >
       <h2>Who we are</h2>
@@ -53,8 +53,8 @@ export default function PrivacyPage() {
 
       <h2>If you contact us</h2>
       <p>
-        If you contact us by email, we use the information you send — such as your name, email address and message —
-        to reply to you and handle your request.
+        If you contact us, we use the information you send — such as your name, contact details and message — to reply
+        to you and handle your request.
       </p>
 
       <h2>Changes to this page</h2>

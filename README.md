@@ -49,8 +49,12 @@ sitemap. Set `productSlug` to link it to a product.
 
 ## Configuration still needed before launch
 
-- `site.contact.email` in `src/content/site.ts` — a verified public contact address.
-- Official logo (the favicon in `src/app/icon.tsx` is a placeholder letter mark).
+- Official logo: the favicon in `src/app/icon.tsx` is a placeholder letter mark,
+  and the header uses a text wordmark, until the approved logo assets are added.
+
+The site intentionally publishes no email address. The Contact page shows a
+neutral status message until a secure contact form is added; see
+`site.contact.formEnabled` in `src/content/site.ts`.
 
 Not required for launch: Stockline documentation is included with purchase;
 there is no public docs URL. If one is published later, set `docs.url` in
