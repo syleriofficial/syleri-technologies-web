@@ -26,6 +26,18 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/brand/favicon-light.png", media: "(prefers-color-scheme: light)", type: "image/png" },
+      { url: "/brand/favicon-dark.png", media: "(prefers-color-scheme: dark)", type: "image/png" },
+      { url: "/brand/favicon-light.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/brand/apple-icon-light.png", media: "(prefers-color-scheme: light)" },
+      { url: "/brand/apple-icon-dark.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/brand/apple-icon-light.png" },
+    ],
+  },
   openGraph: {
     type: "website",
     url: "/",

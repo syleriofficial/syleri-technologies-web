@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { developerProducts, productPath, products } from "@/content/products";
 import { site } from "@/content/site";
-import { Wordmark } from "./site-header";
+import { Logo } from "./logo";
 import { Container } from "./ui/layout";
 
 type FooterLink = { label: string; href: string; external?: boolean };
@@ -47,8 +47,8 @@ export function SiteFooter() {
       <Container className="py-14 sm:py-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div className="max-w-xs">
-            <Link href="/" className="-mx-1 rounded px-1" aria-label="Syleri Technologies home">
-              <Wordmark />
+            <Link href="/" className="-mx-1 inline-flex rounded px-1" aria-label="Syleri Technologies home">
+              <Logo className="h-7" />
             </Link>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
               Software products and developer tools designed to make complex work simpler.
