@@ -15,9 +15,11 @@
   --ink: #142026;
   --ink-soft: #2c3a41;
   --muted: #56656c;
-  --accent: #0b6e5f;
-  --accent-hover: #085a4e;
-  --accent-soft: #e0efeb;
+  /* Accent derived from the approved logo artwork's ribbon gradient
+     (vivid cobalt → deep navy). on-accent stays white. */
+  --accent: #0063c8;
+  --accent-hover: #0051b2;
+  --accent-soft: #e4f0fc;
   --on-accent: #ffffff;
   --notice: #fff7e0;
   --notice-line: #e6cf86;
@@ -34,10 +36,12 @@
   --ink: #e7eeec;
   --ink-soft: #c9d4d2;
   --muted: #9aa9ae;
-  --accent: #5cc9b3;
-  --accent-hover: #7fd8c6;
-  --accent-soft: #15332e;
-  --on-accent: #06231e;
+  /* Same logo gradient, lightened for dark backgrounds. on-accent is the
+     logo wordmark's own navy ink. */
+  --accent: #71bcf6;
+  --accent-hover: #84c6f7;
+  --accent-soft: #122942;
+  --on-accent: #081a2a;
   --notice: #2a2412;
   --notice-line: #6b5a1f;
   --notice-ink: #f1dc9c;

@@ -37,11 +37,11 @@ export function ogCard({ kicker, title, subtitle }: { kicker: string; title: str
           <span style={{ color: "#56656c" }}>Technologies</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 28, color: "#0b6e5f", marginBottom: 18 }}>{kicker}</div>
+          <div style={{ fontSize: 28, color: "#0063c8", marginBottom: 18 }}>{kicker}</div>
           <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.03em", maxWidth: 960 }}>{title}</div>
           <div style={{ fontSize: 30, color: "#56656c", marginTop: 24, maxWidth: 920 }}>{subtitle}</div>
         </div>
-        <div style={{ display: "flex", height: 6, width: 120, background: "#0b6e5f" }} />
+        <div style={{ display: "flex", height: 6, width: 120, background: "#0063c8" }} />
       </div>
     ),
     ogSize,
