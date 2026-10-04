@@ -1,3 +1,4 @@
+import { ContactForm } from "@/components/contact-form";
 import { JsonLd } from "@/components/json-ld";
 import { Container } from "@/components/ui/layout";
 import { Notice } from "@/components/ui/notice";
@@ -39,8 +40,7 @@ export default function ContactPage() {
 
             <div className="mt-10">
               {site.contact.formEnabled ? (
-                // Slot for the future secure contact form (see `site.contact` in src/content/site.ts).
-                null
+                <ContactForm />
               ) : (
                 <Notice title="Current status" role="status">
                   <p>{CONTACT_STATUS}</p>

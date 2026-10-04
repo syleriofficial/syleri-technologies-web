@@ -19,16 +19,17 @@ export const site = {
    * Policy: the site never publishes an email address — not in page copy,
    * mailto links, metadata, JSON-LD or client-side JavaScript. Do not add one.
    *
-   * `formEnabled` is the switch for a future secure contact form. Keep it
-   * false until a server-side handler exists (a Next.js route handler or
-   * server action that validates input, applies spam protection and
-   * delivers messages without exposing the destination mailbox). Then set it
-   * to true and render the form in the slot marked in
-   * src/app/contact/page.tsx. While false, the Contact page shows a neutral
-   * status message and no form.
+   * `formEnabled` switches on the secure contact form (src/components/
+   * contact-form.tsx). Submissions are handled by a server action
+   * (src/app/contact/actions.ts) that validates input, applies honeypot +
+   * timing + rate-limit spam protection, and sends via src/lib/contact/
+   * mailer.ts — which reads the destination mailbox and mail-service API
+   * key from environment variables (see .env.example) and never exposes
+   * them to the client. Set this back to false to show the neutral status
+   * message instead, with no code changes needed.
    */
   contact: {
-    formEnabled: false as boolean,
+    formEnabled: true as boolean,
   },
 } as const;
 
