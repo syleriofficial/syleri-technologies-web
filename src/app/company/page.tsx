@@ -11,7 +11,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 export const metadata = pageMetadata({
   title: "Company",
   description:
-    "Syleri Technologies is a software company that designs and develops software products and developer tools.",
+    "Syleri Technologies is a technology company that builds software, platforms and technology products.",
   path: "/company",
 });
 
@@ -44,7 +44,7 @@ export default function CompanyPage() {
           </h1>
           <div className="mt-8 grid gap-6 lg:grid-cols-2 lg:gap-16">
             <p className="type-lead max-w-[40ch]">
-              A software company that designs and develops software products and developer tools.
+              A technology company that builds software, platforms and technology products.
             </p>
             <p className="max-w-[52ch] leading-relaxed text-muted">
               We are building a portfolio of products across several areas of work, and we release each one when it is

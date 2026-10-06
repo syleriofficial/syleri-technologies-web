@@ -7,9 +7,11 @@
 export const site = {
   name: "Syleri Technologies",
   url: "https://syleritechnologies.com",
-  title: "Syleri Technologies — Software Products & Developer Tools",
+  title: "Syleri Technologies — Software, Platforms & Technology Products",
   description:
-    "Syleri Technologies builds software products and developer tools designed to make complex work simpler.",
+    "Syleri Technologies builds software, platforms and technology products designed to make complex work simpler.",
+  /** Optional company tagline. Shown beside the logo where appropriate — never inside the logo itself. */
+  tagline: "Technology for what’s next.",
   locale: "en_US",
   copyrightYear: 2026,
 

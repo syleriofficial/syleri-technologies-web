@@ -1,5 +1,18 @@
+import fs from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 import { categoryName, type Product } from "@/content/products";
+
+/** Approved light-background logo lockup (symbol + "Syleri Technologies"), 893×386. */
+const LOGO_W = 893;
+const LOGO_H = 386;
+let logoDataUri: string | undefined;
+function brandLogo() {
+  logoDataUri ??= `data:image/png;base64,${fs
+    .readFileSync(path.join(process.cwd(), "public/brand/syleri-technologies-logo-light.png"))
+    .toString("base64")}`;
+  return logoDataUri;
+}
 
 export const ogSize = { width: 1200, height: 630 };
 
@@ -16,7 +29,7 @@ export function productOgAlt(p: Product) {
   return `${p.name} — ${p.subtitle}`;
 }
 
-/** Text-only social card. No product UI is drawn — only real words. */
+/** Social card: approved logo lockup plus real words. No product UI is drawn. */
 export function ogCard({ kicker, title, subtitle }: { kicker: string; title: string; subtitle: string }) {
   return new ImageResponse(
     (
@@ -32,10 +45,8 @@ export function ogCard({ kicker, title, subtitle }: { kicker: string; title: str
           padding: "72px 80px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "baseline", gap: 12, fontSize: 30 }}>
-          <span style={{ fontWeight: 700 }}>Syleri</span>
-          <span style={{ color: "#56656c" }}>Technologies</span>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse renders plain <img>. */}
+        <img src={brandLogo()} alt="Syleri Technologies" width={Math.round((LOGO_W * 92) / LOGO_H)} height={92} style={{ marginTop: -12, marginLeft: -6 }} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 28, color: "#0063c8", marginBottom: 18 }}>{kicker}</div>
           <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.05, letterSpacing: "-0.03em", maxWidth: 960 }}>{title}</div>

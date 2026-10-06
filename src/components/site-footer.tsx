@@ -50,9 +50,7 @@ export function SiteFooter() {
             <Link href="/" className="-mx-1 inline-flex rounded px-1" aria-label="Syleri Technologies home">
               <Logo className="h-7" />
             </Link>
-            <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
-              Software products and developer tools designed to make complex work simpler.
-            </p>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">{site.tagline}</p>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {groups.map((group) => (

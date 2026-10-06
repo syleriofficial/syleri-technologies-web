@@ -6,7 +6,7 @@ const DEFAULT_OG_IMAGE = {
   url: "/opengraph-image",
   width: 1200,
   height: 630,
-  alt: "Syleri Technologies — Software Products & Developer Tools",
+  alt: site.title,
 };
 
 /**

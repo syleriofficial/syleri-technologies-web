@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import type { NavItem } from "@/content/site";
+import { Logo } from "./logo";
 import { isActive } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -58,9 +59,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
       >
         <div className="flex h-full flex-col">
           <div className="flex h-16 items-center justify-between border-b border-line px-5">
-            <span className="text-[1.0625rem] font-[680] tracking-[-0.02em]">
-              Syleri <span className="font-[450] text-muted">Technologies</span>
-            </span>
+            <Logo className="h-8" />
             <button
               type="button"
               onClick={close}

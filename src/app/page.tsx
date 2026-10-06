@@ -68,7 +68,7 @@ export default function HomePage() {
           <dl className="mt-14 grid border-t border-line sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
             <div className="border-b border-line py-6 sm:pr-6 lg:border-b-0 lg:border-r">
               <dt className="text-[0.875rem] text-muted">What we build</dt>
-              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">Software products and developer tools</dd>
+              <dd className="mt-1.5 text-[1.0625rem] font-[560] leading-snug">Software, platforms and technology products</dd>
             </div>
             <div className="border-b border-line py-6 sm:pl-6 lg:border-b-0 lg:border-r lg:px-6">
               <dt className="text-[0.875rem] text-muted">Focus areas</dt>

@@ -47,14 +47,20 @@ Add an entry to the top of `updates` in `src/content/updates.ts`. It gets a
 page at `/updates/<slug>` and appears on `/updates`, the home page and the
 sitemap. Set `productSlug` to link it to a product.
 
+## Brand
+
+- Approved logo assets live in `public/brand/` (light/dark lockups, the
+  blue "S" symbol, favicons and Apple touch icons) and are rendered by
+  `src/components/logo.tsx`.
+- The logo is the symbol plus "Syleri Technologies" only. The tagline
+  "Technology for what’s next." (`site.tagline`) appears beside it where
+  appropriate (footer, main social card), never inside the logo.
+
 ## Configuration still needed before launch
 
-- Official logo: the favicon in `src/app/icon.tsx` is a placeholder letter mark,
-  and the header uses a text wordmark, until the approved logo assets are added.
-
-The site intentionally publishes no email address. The Contact page shows a
-neutral status message until a secure contact form is added; see
-`site.contact.formEnabled` in `src/content/site.ts`.
+- Contact form delivery: set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and
+  `CONTACT_FROM_EMAIL` in the hosting environment (see `.env.example`).
+  These stay server-side; the site never publishes an email address.
 
 Not required for launch: Stockline documentation is included with purchase;
 there is no public docs URL. If one is published later, set `docs.url` in

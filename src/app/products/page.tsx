@@ -10,7 +10,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata = pageMetadata({
   title: "Products",
-  description: "Software products and developer tools from Syleri Technologies, with category, version and availability for each.",
+  description: "Software, platforms and technology products from Syleri Technologies, with category, version and availability for each.",
   path: "/products",
 });
 
