@@ -21,17 +21,20 @@ export const site = {
    * Policy: the site never publishes an email address — not in page copy,
    * mailto links, metadata, JSON-LD or client-side JavaScript. Do not add one.
    *
-   * `formEnabled` switches on the secure contact form (src/components/
-   * contact-form.tsx). Submissions are handled by a server action
-   * (src/app/contact/actions.ts) that validates input, applies honeypot +
-   * timing + rate-limit spam protection, and sends via src/lib/contact/
-   * mailer.ts — which reads the destination mailbox and mail-service API
-   * key from environment variables (see .env.example) and never exposes
-   * them to the client. Set this back to false to show the neutral status
-   * message instead, with no code changes needed.
+   * `formEnabled` is currently false: the Contact page shows a neutral
+   * status message and the contact form is off. No mail-service environment
+   * variables are needed while it is false.
+   *
+   * The form code is kept, isolated, for later: src/components/
+   * contact-form.tsx, the server action in src/app/contact/actions.ts
+   * (honeypot, timing and rate-limit spam protection; it refuses all
+   * submissions while this flag is false), and src/lib/contact/mailer.ts,
+   * which sends via Resend using server-side environment variables (see
+   * .env.example). To re-enable: configure those variables in the hosting
+   * environment, then set this to true.
    */
   contact: {
-    formEnabled: true as boolean,
+    formEnabled: false as boolean,
   },
 } as const;
 

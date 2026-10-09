@@ -27,3 +27,7 @@ npm-debug.log*
 
 # vercel
 .vercel
+
+# Next.js writes these when `next dev` runs under an AI coding agent; not part of the project
+AGENTS.md
+CLAUDE.md

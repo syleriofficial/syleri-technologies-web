@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { site } from "@/content/site";
 import { checkRateLimit } from "@/lib/contact/rate-limit";
 import { sendContactEmail } from "@/lib/contact/mailer";
 import type { ContactFormState } from "@/lib/contact/types";
@@ -19,6 +20,7 @@ const SUCCESS_MESSAGE = "Thanks — your message has been sent. We'll get back t
 const GENERIC_ERROR_MESSAGE = "Something went wrong sending your message. Please try again in a moment.";
 const EXPIRED_MESSAGE = "Your session expired before the message could be sent. Please reload the page and try again.";
 const RATE_LIMITED_MESSAGE = "Too many messages sent recently. Please try again in a few minutes.";
+const DISABLED_MESSAGE = "The contact form is not available at the moment.";
 
 // A genuine visitor always takes at least this long to fill the form; a
 // script submitting immediately on page load does not. Paired with the
@@ -39,6 +41,12 @@ async function getClientKey(): Promise<string> {
 }
 
 export async function submitContactForm(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
+  // The form is switched off (site.contact.formEnabled). Refuse direct
+  // submissions too, so nothing is processed or sent until it is re-enabled.
+  if (!site.contact.formEnabled) {
+    return { status: "error", message: DISABLED_MESSAGE };
+  }
+
   // Honeypot: real visitors never see or fill this field (it's visually
   // hidden and marked aria-hidden in the form). Anything that fills it is
   // automated. Report success without sending anything, so scripts don't

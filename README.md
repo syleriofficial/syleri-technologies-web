@@ -56,12 +56,15 @@ sitemap. Set `productSlug` to link it to a product.
   "Technology for what’s next." (`site.tagline`) appears beside it where
   appropriate (footer, main social card), never inside the logo.
 
-## Configuration still needed before launch
+## Contact
 
-- Contact form delivery: set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and
-  `CONTACT_FROM_EMAIL` in the hosting environment (see `.env.example`).
-  These stay server-side; the site never publishes an email address.
+The Contact page shows a neutral status message; the contact form is
+switched off (`site.contact.formEnabled` in `src/content/site.ts`) and no
+mail-service environment variables are needed. The form code is kept for
+later: to re-enable it, set the variables in `.env.example` in the hosting
+environment, then set `formEnabled` to true. The site never publishes an
+email address.
 
-Not required for launch: Stockline documentation is included with purchase;
+Optional: Stockline documentation is included with purchase;
 there is no public docs URL. If one is published later, set `docs.url` in
 `src/content/products/stockline/index.ts`.
