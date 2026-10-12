@@ -7,6 +7,12 @@ import Image from "next/image";
  * render on the server and there is no flash. See ThemeToggle for the same
  * pattern.
  */
+/**
+ * The lockup never renders wider than about 110px, so request a matching
+ * source (1x/2x) instead of a full-viewport-sized image.
+ */
+const LOGO_SIZES = "128px";
+
 export function Logo({ className = "", priority = false }: { className?: string; priority?: boolean }) {
   return (
     <>
@@ -15,6 +21,7 @@ export function Logo({ className = "", priority = false }: { className?: string;
         alt="Syleri Technologies"
         width={893}
         height={386}
+        sizes={LOGO_SIZES}
         priority={priority}
         className={`block w-auto dark:hidden ${className}`}
       />
@@ -23,6 +30,7 @@ export function Logo({ className = "", priority = false }: { className?: string;
         alt="Syleri Technologies"
         width={697}
         height={282}
+        sizes={LOGO_SIZES}
         priority={priority}
         className={`hidden w-auto dark:block ${className}`}
       />

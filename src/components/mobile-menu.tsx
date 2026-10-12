@@ -59,7 +59,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
       >
         <div className="flex h-full flex-col">
           <div className="flex h-16 items-center justify-between border-b border-line px-5">
-            <Logo className="h-8" />
+            <Logo className="h-9" />
             <button
               type="button"
               onClick={close}

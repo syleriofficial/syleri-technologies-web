@@ -15,7 +15,7 @@ import { categories, type CategoryId, type FocusAreaId } from "../catalog";
 import { stockline } from "./stockline";
 import type { Product, ProductStatus } from "./types";
 
-export type { Product, ProductMedia, ProductStatus } from "./types";
+export type { Product, ProductMedia, ProductShowcase, ProductStatus } from "./types";
 
 /** Registry order is the default display order within a category. */
 const registry: Product[] = [stockline];

@@ -10,11 +10,12 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <Container className="flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="-mx-1 flex items-center rounded px-1" aria-label="Syleri Technologies home">
-          <span className="hidden md:block">
-            <Logo className="h-8" priority />
+        <Link href="/" className="-mx-1 flex shrink-0 items-center rounded px-1" aria-label="Syleri Technologies home">
+          {/* Full lockup at every width from 360px up; the symbol alone only on very narrow screens. */}
+          <span className="hidden min-[22.5rem]:block">
+            <Logo className="h-9 md:h-11" priority />
           </span>
-          <span className="md:hidden">
+          <span className="min-[22.5rem]:hidden">
             <LogoSymbol className="h-8" priority />
           </span>
         </Link>

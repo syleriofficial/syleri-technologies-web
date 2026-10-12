@@ -12,6 +12,23 @@ export type ProductMedia = {
   alt: string;
   /** What the image must show. Used for the placeholder and asset docs. */
   brief: string;
+  /** Intrinsic pixel size. Lets large images reserve their space (no layout shift). */
+  width?: number;
+  height?: number;
+};
+
+/**
+ * Home page showcase for a featured product: one large real screenshot
+ * (with an optional dark-theme counterpart) and up to three short,
+ * factual capability notes.
+ */
+export type ProductShowcase = {
+  /** One or two factual sentences under the product's subtitle. */
+  lead: string;
+  image: ProductMedia;
+  /** Same view in the dark theme; shown when the site is in dark mode. */
+  imageDark?: ProductMedia;
+  points: { title: string; body: string }[];
 };
 
 /**
@@ -79,6 +96,8 @@ export type Product = {
 
   /** Primary image: home feature, /products, template page. */
   cover?: ProductMedia;
+  /** Large home page presentation when this product leads the featured products. */
+  showcase?: ProductShowcase;
 
   seo: { title: string; description: string };
   /** Schema.org Product fields. Only factual values. */

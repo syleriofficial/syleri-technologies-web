@@ -34,6 +34,16 @@ export const stockline: Product = {
     note: "Documentation included with purchase.",
   },
   cover: stocklineMedia.pos,
+  showcase: {
+    lead: "A production-quality frontend for building retail, inventory, warehouse, purchasing and sales software, ready to connect to your own backend.",
+    image: stocklineMedia.dashboard,
+    imageDark: stocklineMedia.dark,
+    points: [
+      { title: "Point of sale", body: "A terminal screen for building a cart and working through a sale." },
+      { title: "Inventory and warehouses", body: "Stock levels, adjustments and transfers across locations." },
+      { title: "Reports", body: "Sales and profit trends, with charts ready for real data." },
+    ],
+  },
   seo: {
     title: "Stockline — POS & Inventory Management Next.js Dashboard",
     description:

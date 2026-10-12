@@ -7,7 +7,7 @@ export const companyStatement = {
   /** Home hero headline. */
   headline: "Technology products built to make complex work simpler.",
   /** Home hero supporting copy. */
-  lead: "Syleri Technologies builds software, platforms and technology products. We take on work that is complicated by nature and turn it into technology that is clear to use, clear to build on and honest about what it does.",
+  lead: "Syleri Technologies builds software, platforms and technology products — clear to use, clear to build on and honest about what they do.",
 };
 
 /** Product principles: how we decide what a product is and how we present it. */
@@ -17,7 +17,7 @@ export const productPrinciples = [
     body: "Every product states what it does and what it does not include, on its own page, before you buy.",
   },
   {
-    title: "Judge it yourself",
+    title: "See it for yourself",
     body: "Live demos where possible and documentation with every release, so a product can be evaluated on the work itself.",
   },
   {
@@ -45,3 +45,13 @@ export const engineeringPrinciples = [
     body: "Fast loading and responsive interfaces are part of quality, not an optimization pass at the end.",
   },
 ];
+
+/**
+ * The four principles shown on the home page. The full set lives on the
+ * company page.
+ */
+const HOME_PRINCIPLE_TITLES = ["Clear scope", "See it for yourself", "Accessible baseline", "Performance as a feature"];
+const allPrinciples = [...productPrinciples, ...engineeringPrinciples];
+export const homePrinciples = HOME_PRINCIPLE_TITLES.map((title) => allPrinciples.find((p) => p.title === title)).filter(
+  (p): p is (typeof allPrinciples)[number] => p !== undefined,
+);
