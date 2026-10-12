@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { site } from "@/content/site";
 import { checkRateLimit } from "@/lib/contact/rate-limit";
 import { sendContactEmail } from "@/lib/contact/mailer";
-import type { ContactFormState } from "@/lib/contact/types";
+import type { ContactFields, ContactFormState } from "@/lib/contact/types";
 import { validateContactSubmission } from "@/lib/contact/validate";
 
 /**
@@ -16,9 +16,10 @@ import { validateContactSubmission } from "@/lib/contact/validate";
  * validation errors.
  */
 
-const SUCCESS_MESSAGE = "Thanks — your message has been sent. We'll get back to you by email.";
-const GENERIC_ERROR_MESSAGE = "Something went wrong sending your message. Please try again in a moment.";
-const EXPIRED_MESSAGE = "Your session expired before the message could be sent. Please reload the page and try again.";
+const SUCCESS_MESSAGE = "Thanks for contacting Syleri Technologies. We’ve received your message.";
+const GENERIC_ERROR_MESSAGE = "We couldn’t send your message right now. Please try again later.";
+const TOO_FAST_MESSAGE = "Please wait a moment, then send your message again.";
+const EXPIRED_MESSAGE = "This form has expired. Please reload the page and try again.";
 const RATE_LIMITED_MESSAGE = "Too many messages sent recently. Please try again in a few minutes.";
 const DISABLED_MESSAGE = "The contact form is not available at the moment.";
 
@@ -32,6 +33,19 @@ const MAX_FORM_AGE_MS = 2 * 60 * 60 * 1000;
 
 const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX ?? 5);
 const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MINUTES ?? 10) * 60_000;
+
+const FIELDS: ContactFields[] = ["name", "email", "subject", "message"];
+const MAX_ECHO_LENGTH = 5000;
+
+/** The visitor's input, returned on error so the form keeps what they typed. */
+function submittedValues(formData: FormData): ContactFormState["values"] {
+  const values: ContactFormState["values"] = {};
+  for (const field of FIELDS) {
+    const v = formData.get(field);
+    if (typeof v === "string") values[field] = v.slice(0, MAX_ECHO_LENGTH);
+  }
+  return values;
+}
 
 async function getClientKey(): Promise<string> {
   const hdrs = await headers();
@@ -59,28 +73,36 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
   const renderedAtRaw = formData.get("formRenderedAt");
   const renderedAt = typeof renderedAtRaw === "string" ? Number(renderedAtRaw) : NaN;
   const elapsed = Date.now() - renderedAt;
-  if (!Number.isFinite(renderedAt) || elapsed < MIN_FILL_TIME_MS || elapsed > MAX_FORM_AGE_MS) {
-    return { status: "error", message: EXPIRED_MESSAGE };
+  if (!Number.isFinite(renderedAt) || elapsed > MAX_FORM_AGE_MS) {
+    return { status: "error", message: EXPIRED_MESSAGE, values: submittedValues(formData) };
   }
-
-  const clientKey = await getClientKey();
-  const rateLimit = checkRateLimit(clientKey, { max: RATE_LIMIT_MAX, windowMs: RATE_LIMIT_WINDOW_MS });
-  if (!rateLimit.allowed) {
-    return { status: "error", message: RATE_LIMITED_MESSAGE };
+  if (elapsed < MIN_FILL_TIME_MS) {
+    return { status: "error", message: TOO_FAST_MESSAGE, values: submittedValues(formData) };
   }
 
   const validation = validateContactSubmission(formData);
   if (!validation.ok) {
-    return { status: "error", message: "Please fix the highlighted fields.", fieldErrors: validation.fieldErrors };
+    return { status: "error", message: "Please fix the highlighted fields.", fieldErrors: validation.fieldErrors, values: submittedValues(formData) };
+  }
+
+  // Rate-limit every submission that would send mail (5 per 10 minutes per
+  // IP by default). Validation runs first so a visitor correcting typos
+  // doesn't use up their allowance; invalid submissions never send anything.
+  const clientKey = await getClientKey();
+  const rateLimit = checkRateLimit(clientKey, { max: RATE_LIMIT_MAX, windowMs: RATE_LIMIT_WINDOW_MS });
+  if (!rateLimit.allowed) {
+    return { status: "error", message: RATE_LIMITED_MESSAGE, values: submittedValues(formData) };
   }
 
   try {
     await sendContactEmail(validation.data);
   } catch (err) {
-    // Full detail goes to server logs only; the visitor gets a generic
-    // message with no information about the mail service or its config.
-    console.error("[contact] failed to send message:", err);
-    return { status: "error", message: GENERIC_ERROR_MESSAGE };
+    // Server logs get only the error class and a short summary (never
+    // addresses, the API key or provider response bodies); the visitor gets
+    // a generic message with no information about the mail service.
+    const detail = err instanceof Error ? `${err.name}: ${err.message}` : "unknown error";
+    console.error(`[contact] failed to send message — ${detail}`);
+    return { status: "error", message: GENERIC_ERROR_MESSAGE, values: submittedValues(formData) };
   }
 
   return { status: "success", message: SUCCESS_MESSAGE };

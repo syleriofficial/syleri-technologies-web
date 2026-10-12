@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy"
-      updated="2026-10-04"
+      updated="2026-10-12"
       intro="This page explains what information the Syleri Technologies website handles. We have kept the site simple so that the answer is short."
     >
       <h2>Who we are</h2>
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
 
       <h2>What this website does not do</h2>
       <ul>
-        <li>It has no user accounts, sign-in or contact forms.</li>
+        <li>It has no user accounts or sign-in.</li>
         <li>It does not use analytics, advertising or tracking tools.</li>
         <li>It does not set cookies of its own.</li>
         <li>It loads its fonts from this website, not from a third-party font service.</li>
@@ -53,8 +53,10 @@ export default function PrivacyPage() {
 
       <h2>If you contact us</h2>
       <p>
-        If you contact us, we use the information you send — such as your name, contact details and message — to reply
-        to you and handle your request.
+        If you send a message through the contact form, we use the information you provide — your name, email address,
+        subject and message — to reply to you and handle your request. The message is delivered to us by email through
+        our email delivery provider, Resend. To protect the form from abuse, your IP address is briefly checked against a
+        temporary limit on the number of messages sent; it is not included in the message or stored by us.
       </p>
 
       <h2>Changes to this page</h2>

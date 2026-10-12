@@ -58,12 +58,18 @@ sitemap. Set `productSlug` to link it to a product.
 
 ## Contact
 
-The Contact page shows a neutral status message; the contact form is
-switched off (`site.contact.formEnabled` in `src/content/site.ts`) and no
-mail-service environment variables are needed. The form code is kept for
-later: to re-enable it, set the variables in `.env.example` in the hosting
-environment, then set `formEnabled` to true. The site never publishes an
-email address.
+The Contact page has a contact form (`site.contact.formEnabled` in
+`src/content/site.ts`). Submissions are handled by a server action and sent
+through Resend; the server needs these environment variables in the hosting
+environment (see `.env.example`):
+
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL` (destination mailbox, never published)
+- `CONTACT_FROM_EMAIL` (verified sender on the Resend domain)
+
+The visitor's address is used as the reply-to. Set `formEnabled` to false to
+show a neutral status message instead of the form. The site never publishes
+an email address.
 
 Optional: Stockline documentation is included with purchase;
 there is no public docs URL. If one is published later, set `docs.url` in
