@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Terms",
-  description: "Terms of use for the Syleri Technologies website.",
+  description: "Terms of use for the Syleri Technologies website: product licenses, website content, acceptable use, accuracy, liability and changes.",
   path: "/terms",
 });
 

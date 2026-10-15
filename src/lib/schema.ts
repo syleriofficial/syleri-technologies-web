@@ -1,13 +1,15 @@
 import { categoryName, productPath, type Product } from "@/content/products";
 import { site } from "@/content/site";
 
-/** Organization — factual fields only (no logo, address, founders or social profiles until supplied). */
+/** Organization — factual fields only (no address, founders or social profiles until supplied). */
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": `${site.url}/#organization`,
   name: site.name,
   url: site.url,
+  // The approved square symbol, 180x180.
+  logo: `${site.url}/brand/apple-icon-light.png`,
   description: site.description,
 };
 
@@ -50,6 +52,8 @@ export function productSchema(p: Product) {
     description: p.schema.description,
     category: p.schema.category || categoryName(p.category),
     url,
+    // Real product screenshots only.
+    ...(p.cover ? { image: [p.cover, p.showcase?.image].filter((m): m is NonNullable<typeof m> => m !== undefined).map((m) => `${site.url}${m.src}`) } : {}),
     ...(p.schema.sku ? { sku: p.schema.sku } : {}),
     brand: { "@type": "Brand", name: site.name },
     manufacturer: { "@id": `${site.url}/#organization` },
