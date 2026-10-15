@@ -1,5 +1,13 @@
 /** Shared types for the contact form. No secrets live here. */
 
+/**
+ * Name of the hidden anti-spam (honeypot) field shared by the form and the
+ * server action. Deliberately meaningless: names such as "company",
+ * "website" or "phone" can be filled by browser autofill or password
+ * managers, which would silently discard a real visitor's message.
+ */
+export const HONEYPOT_FIELD_NAME = "hp_x7q2";
+
 export type ContactFields = "name" | "email" | "subject" | "message";
 
 export type ContactFormState = {

@@ -2,9 +2,10 @@
 
 import { headers } from "next/headers";
 import { site } from "@/content/site";
+import { clientIpFromHeaders, positiveIntSetting } from "@/lib/contact/client-ip";
 import { checkRateLimit } from "@/lib/contact/rate-limit";
 import { sendContactEmail } from "@/lib/contact/mailer";
-import type { ContactFields, ContactFormState } from "@/lib/contact/types";
+import { HONEYPOT_FIELD_NAME, type ContactFields, type ContactFormState } from "@/lib/contact/types";
 import { validateContactSubmission } from "@/lib/contact/validate";
 
 /**
@@ -31,10 +32,11 @@ const MIN_FILL_TIME_MS = 1500;
 // request) rather than accept it indefinitely.
 const MAX_FORM_AGE_MS = 2 * 60 * 60 * 1000;
 
-const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX ?? 5);
-const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MINUTES ?? 10) * 60_000;
+const RATE_LIMIT_MAX = positiveIntSetting(process.env.CONTACT_RATE_LIMIT_MAX, 5);
+const RATE_LIMIT_WINDOW_MS = positiveIntSetting(process.env.CONTACT_RATE_LIMIT_WINDOW_MINUTES, 10) * 60_000;
 
 const FIELDS: ContactFields[] = ["name", "email", "subject", "message"];
+
 const MAX_ECHO_LENGTH = 5000;
 
 /** The visitor's input, returned on error so the form keeps what they typed. */
@@ -49,9 +51,7 @@ function submittedValues(formData: FormData): ContactFormState["values"] {
 
 async function getClientKey(): Promise<string> {
   const hdrs = await headers();
-  const forwardedFor = hdrs.get("x-forwarded-for");
-  const ip = forwardedFor?.split(",")[0]?.trim() || hdrs.get("x-real-ip") || "unknown";
-  return `contact:${ip}`;
+  return `contact:${clientIpFromHeaders((name) => hdrs.get(name))}`;
 }
 
 export async function submitContactForm(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
@@ -65,7 +65,7 @@ export async function submitContactForm(_prevState: ContactFormState, formData: 
   // hidden and marked aria-hidden in the form). Anything that fills it is
   // automated. Report success without sending anything, so scripts don't
   // learn to avoid the trap.
-  const honeypot = formData.get("company");
+  const honeypot = formData.get(HONEYPOT_FIELD_NAME);
   if (typeof honeypot === "string" && honeypot.trim() !== "") {
     return { status: "success", message: SUCCESS_MESSAGE };
   }
