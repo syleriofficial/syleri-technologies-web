@@ -12,7 +12,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --conditions=react-server \"tests/unit/**/*.test.ts\"",
+    "test:smoke": "node --test \"tests/smoke/**/*.test.ts\""
   },
   "dependencies": {
     "next": "16.3.8",
