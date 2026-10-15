@@ -8,6 +8,11 @@ import Image from "next/image";
  * pattern.
  */
 /**
+ * Logos are not preloaded: each placement renders a light and a dark copy
+ * (and the header a symbol-only copy) and only one is visible, so a preload
+ * would always fetch images that are never shown. Lazy loading still fetches
+ * the visible copy immediately because it sits in the first viewport.
+ *
  * The lockup never renders wider than about 110px, so request a matching
  * source (1x/2x) instead of a full-viewport-sized image.
  */
