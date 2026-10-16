@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { ProductCard } from "@/components/product-feature";
-import { ProductShowcase } from "@/components/product-showcase";
-import { ButtonLink, TextLink } from "@/components/ui/button-link";
-import { Container, Section, SectionHeading } from "@/components/ui/layout";
+import { Figure, FigureBand } from "@/components/figure";
+import { ArrowLink, ButtonLink } from "@/components/ui/button-link";
+import { Container, FactsRow, IndexedSection, RuledRow, SectionIndex } from "@/components/ui/layout";
 import { focusAreas } from "@/content/catalog";
-import { companyStatement, homePrinciples } from "@/content/company";
-import { featuredProducts, getProduct, products } from "@/content/products";
+import { companyStatement, workStatements } from "@/content/company";
+import { featuredProducts, productPath, type Product } from "@/content/products";
 import { site } from "@/content/site";
-import { formatDate, updateKindLabel, updates } from "@/content/updates";
+import { latestRelease, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -17,144 +16,154 @@ export const metadata = pageMetadata({
   absoluteTitle: true,
 });
 
+/** Where each "How we work" statement points, resolved from the lead product's record. */
+function evidenceLink(product: Product | undefined, kind: (typeof workStatements)[number]["link"]) {
+  if (!product) return null;
+  if (kind === "demo") return product.demoUrl ? { href: product.demoUrl, label: "Open the demo", external: true } : null;
+  if (kind === "not-included") return { href: `${productPath(product)}#not-included`, label: `${product.name}’s list`, external: false };
+  const release = latestRelease(product.slug);
+  return release ? { href: `/updates/${release.slug}`, label: "Release notes", external: false } : null;
+}
+
 export default function HomePage() {
-  const [lead, ...moreFeatured] = featuredProducts();
-  const available = products.filter((p) => p.status === "available");
+  const [lead] = featuredProducts();
+  const showcase = lead?.showcase;
   const latestUpdates = updates.slice(0, 3);
 
   return (
     <>
-      {/* 1. Company hero */}
+      {/* Hero */}
       <section aria-labelledby="hero-title">
-        <Container className="pb-4 pt-16 sm:pt-24 lg:pt-32">
-          <p className="text-[0.9375rem] font-[560] text-muted sm:text-base">{site.tagline}</p>
-          <h1 id="hero-title" className="type-display mt-5 max-w-[16ch]">
-            {companyStatement.headline}
+        <Container className="pb-12 pt-14 sm:pb-20 sm:pt-24 lg:pt-28">
+          <SectionIndex className="flex items-center gap-3">
+            <span aria-hidden="true" className="inline-block h-0.5 w-6 bg-accent" />
+            {site.name}
+          </SectionIndex>
+          <h1 id="hero-title" className="type-display mt-6 max-w-[17ch] sm:mt-8 lg:max-w-none">
+            {companyStatement.headline[0]} <br className="hidden lg:inline" />
+            {companyStatement.headline[1]}
           </h1>
-          <p className="type-lead mt-7 max-w-[54ch] sm:mt-8">{companyStatement.lead}</p>
-          <div className="mt-9 flex flex-col gap-3 xs:flex-row xs:flex-wrap">
-            <ButtonLink href="/products" size="lg">
-              Explore products
-            </ButtonLink>
-            <ButtonLink href="/company" size="lg" variant="secondary">
-              About Syleri Technologies
-            </ButtonLink>
+          <div className="mt-8 grid gap-8 sm:mt-10 lg:grid-cols-12 lg:items-end lg:gap-x-8">
+            <p className="type-lead max-w-[38rem] lg:col-span-7">{companyStatement.lead}</p>
+            {lead ? (
+              <div className="flex flex-col items-start gap-5 xs:flex-row xs:items-center xs:gap-6 lg:col-span-5 lg:justify-end">
+                <ButtonLink href={productPath(lead)} size="lg">
+                  Explore {lead.name}
+                </ButtonLink>
+                {lead.demoUrl ? (
+                  <ArrowLink href={lead.demoUrl} newTab>
+                    Open the live demo
+                  </ArrowLink>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </Container>
       </section>
 
-      {/* 2. Lead product showcase (+ any further featured products as cards) */}
-      {lead?.showcase ? (
-        <ProductShowcase product={lead} eyebrow={available.length === 1 ? "Our first product" : "Featured product"} />
-      ) : null}
-      {moreFeatured.length ? (
-        <section aria-label="More featured products" className="pb-20 sm:pb-28">
-          <Container className="grid gap-6 md:grid-cols-2">
-            {moreFeatured.map((p) => (
-              <ProductCard key={p.slug} product={p} />
-            ))}
-          </Container>
-        </section>
+      {/* The one figure band: the lead product's main screen */}
+      {lead?.cover ? (
+        <FigureBand
+          media={lead.cover}
+          index="01"
+          label={`${lead.name} screenshot`}
+          caption={`${lead.name} ${lead.version} · ${lead.cover.brief}`}
+          aside="Real screen · sample data"
+        />
       ) : null}
 
-      {/* 3. What we build */}
-      <Section labelledBy="build-title" tone="surface">
-        <Container>
-          <SectionHeading id="build-title" title="What we build" />
-          <ul className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-3">
-            {focusAreas.map((area) => (
-              <li key={area.id} className="border-t border-line pt-6">
-                <h3 className="type-h3">{area.title}</h3>
-                <p className="mt-2 leading-relaxed text-ink-soft">{area.body}</p>
+      {/* 01 Lead product */}
+      {lead && showcase ? (
+        <IndexedSection id="product" index="01" label={lead.name} title={showcase.title} intro={<p>{showcase.lead}</p>} rule={false}>
+          <FactsRow
+            className="mt-10"
+            items={[
+              { label: "Version", value: lead.version },
+              ...(lead.price ? [{ label: "Price", value: `$${lead.price.amount} one-time` }] : []),
+              ...(lead.license ? [{ label: "License", value: lead.license.name.replace(/ License$/, "") }] : []),
+              ...(lead.stackSummary ? [{ label: "Stack", value: lead.stackSummary }] : []),
+            ]}
+          />
+          <Figure
+            className="mt-12"
+            index="02"
+            caption={showcase.caption}
+            media={showcase.figure ?? showcase.image}
+            mediaDark={showcase.figureDark}
+            sizes="(min-width: 1216px) 870px, (min-width: 1024px) 72vw, calc(100vw - 4rem)"
+          />
+          <p className="mt-10">
+            <ArrowLink href={`${productPath(lead)}#not-included`} tone="accent">
+              See what’s included and what isn’t
+            </ArrowLink>
+          </p>
+        </IndexedSection>
+      ) : null}
+
+      {/* 02 What we work on */}
+      <IndexedSection id="work" index="02" label="What we work on" title="Business operations, and the code behind them.">
+        <div className="mt-10 border-t border-line">
+          {focusAreas.map((area) => (
+            <RuledRow key={area.id} title={area.title}>
+              <p>{area.body}</p>
+            </RuledRow>
+          ))}
+        </div>
+      </IndexedSection>
+
+      {/* 03 How we work */}
+      <IndexedSection id="how" index="03" label="How we work" title="You can check everything before you pay.">
+        <ul className="mt-10 border-t border-line">
+          {workStatements.map((s) => {
+            const link = evidenceLink(lead, s.link);
+            return (
+              <li key={s.link} className="flex flex-col gap-1.5 border-b border-line py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
+                <span className="text-ink">{s.body}</span>
+                {link ? (
+                  <ArrowLink href={link.href} newTab={link.external} tone="accent" className="shrink-0">
+                    {link.label}
+                  </ArrowLink>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+      </IndexedSection>
+
+      {/* 04 Releases + contact */}
+      <IndexedSection id="releases" index="04" label="Releases" hideTitle>
+        {latestUpdates.length ? (
+          <ul className="border-t border-line">
+            {latestUpdates.map((u) => (
+              <li key={u.slug} className="border-b border-line">
+                <Link
+                  href={`/updates/${u.slug}`}
+                  className="group grid gap-1 py-5 sm:grid-cols-[8.5rem_11rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6"
+                >
+                  {u.date ? (
+                    <time dateTime={u.date} className="font-mono text-[0.875rem] text-muted">
+                      {u.date}
+                    </time>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="font-mono text-[0.875rem] text-ink">{u.title}</span>
+                  <span className="text-ink-soft">{u.summary}</span>
+                  <span aria-hidden="true" className="hidden font-medium text-accent group-hover:text-accent-hover sm:inline">
+                    Read →
+                  </span>
+                </Link>
               </li>
             ))}
-            <li className="border-t border-line pt-6">
-              <h3 className="type-h3">For developers</h3>
-              <p className="mt-2 leading-relaxed text-ink-soft">
-                Documentation, live demos and release notes for our developer products.
-              </p>
-              <p className="mt-4">
-                <TextLink href="/developers" className="font-[560]">
-                  Visit the developer hub
-                </TextLink>
-              </p>
-            </li>
           </ul>
-        </Container>
-      </Section>
-
-      {/* 4. How we build */}
-      <Section labelledBy="principles-title">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading
-              id="principles-title"
-              title="How we build"
-              intro="The standards every Syleri Technologies product is held to, whatever it does."
-            />
-            <TextLink href="/company" className="text-[0.9375rem]">
-              More about how we work
-            </TextLink>
-          </div>
-          <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-            {homePrinciples.map((p) => (
-              <li key={p.title} className="border-t-2 border-ink pt-5">
-                <h3 className="text-[1.125rem] font-[640] tracking-[-0.012em]">{p.title}</h3>
-                <p className="mt-2 leading-relaxed text-ink-soft">{p.body}</p>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
-
-      {/* 5. Latest updates + contact */}
-      <Section labelledBy="updates-title" tone="surface">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading id="updates-title" title="Latest updates" />
-            <TextLink href="/updates" className="text-[0.9375rem]">
-              All updates
-            </TextLink>
-          </div>
-          {latestUpdates.length ? (
-            <ul className="mt-10 border-t border-line">
-              {latestUpdates.map((u) => {
-                const product = u.productSlug ? getProduct(u.productSlug) : undefined;
-                return (
-                  <li key={u.slug} className="border-b border-line">
-                    <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-6 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-8">
-                      <span className="text-[0.9375rem] text-muted">
-                        {updateKindLabel[u.kind]}
-                        {product ? <span>, {product.name}</span> : null}
-                        {u.date ? (
-                          <>
-                            <br className="hidden sm:block" />
-                            <span className="sm:hidden">, </span>
-                            <time dateTime={u.date}>{formatDate(u.date)}</time>
-                          </>
-                        ) : null}
-                      </span>
-                      <span>
-                        <span className="block text-lg font-[620] tracking-[-0.01em] group-hover:text-accent">{u.title}</span>
-                        <span className="mt-1 block text-muted">{u.summary}</span>
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : null}
-
-          <div className="mt-16 flex flex-col gap-5 sm:mt-20 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[1.1875rem] font-[560] leading-snug tracking-[-0.01em] text-ink">
-              Questions about our products, licensing or an order?
-            </p>
-            <ButtonLink href="/contact" variant="secondary" size="lg" className="self-start sm:self-auto">
-              Contact
-            </ButtonLink>
-          </div>
-        </Container>
-      </Section>
+        ) : null}
+        <p className="mt-14 max-w-[36ch] text-[1.375rem] leading-snug tracking-[-0.015em] text-ink sm:text-[1.5rem]">
+          Questions about a product, licensing or an order?{" "}
+          <ArrowLink href="/contact" tone="accent">
+            Write to us
+          </ArrowLink>
+        </p>
+      </IndexedSection>
     </>
   );
 }

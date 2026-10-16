@@ -17,6 +17,19 @@ const schibsted = localFont({
   fallback: ["ui-sans-serif", "system-ui", "Segoe UI", "Arial"],
 });
 
+// IBM Plex Mono Regular, Latin subset (SIL OFL 1.1, see ./fonts/IBMPlexMono-OFL.txt).
+// Used only for technical labels: versions, prices, dates, captions. One
+// weight keeps it to a single 15 KB file.
+const plexMono = localFont({
+  src: "./fonts/IBMPlexMono-Regular-latin.woff2",
+  weight: "400",
+  variable: "--font-plex-mono",
+  display: "swap",
+  // Small labels only: not worth competing with the main font on first load.
+  preload: false,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
@@ -63,7 +76,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={schibsted.variable} suppressHydrationWarning>
+    <html lang="en" className={`${schibsted.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <JsonLd data={[organizationSchema, websiteSchema]} />
@@ -71,7 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#main"
-          className="fixed left-4 top-3 z-50 -translate-y-24 rounded-[0.625rem] bg-ink px-4 py-2.5 text-[0.9375rem] font-[560] text-bg focus:translate-y-0"
+          className="fixed left-4 top-3 z-50 -translate-y-24 rounded-md bg-ink px-4 py-2.5 text-[0.9375rem] font-medium text-bg focus:translate-y-0"
         >
           Skip to content
         </a>

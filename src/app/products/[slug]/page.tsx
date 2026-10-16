@@ -50,7 +50,7 @@ export default async function ProductTemplatePage({ params }: Props) {
 
       <section aria-labelledby="product-title">
         <Container className="pb-14 pt-12 sm:pb-20 sm:pt-20">
-          <nav aria-label="Breadcrumb" className="text-[0.875rem] text-muted">
+          <nav aria-label="Breadcrumb" className="type-label">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
                 <TextLink href="/products" className="text-muted">
@@ -66,8 +66,8 @@ export default async function ProductTemplatePage({ params }: Props) {
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
             <div>
-              <p className="text-[0.9375rem] font-[560] text-accent">
-                {p.name} v{p.version}
+              <p className="type-label text-accent">
+                {p.name} {p.version}
               </p>
               <h1 id="product-title" className="type-display mt-4 max-w-[18ch]">
                 {p.subtitle}
@@ -99,7 +99,7 @@ export default async function ProductTemplatePage({ params }: Props) {
       </section>
 
       {p.cover ? (
-        <Section labelledBy="overview-title" tone="surface">
+        <Section labelledBy="overview-title">
           <Container>
             <h2 id="overview-title" className="sr-only">
               Overview
@@ -116,7 +116,7 @@ export default async function ProductTemplatePage({ params }: Props) {
             <ul className="mt-10 grid gap-x-10 gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-3">
               {p.highlights.map((h) => (
                 <li key={h.title}>
-                  <h3 className="font-[620] text-ink">{h.title}</h3>
+                  <h3 className="font-semibold text-ink">{h.title}</h3>
                   <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{h.body}</p>
                 </li>
               ))}
@@ -125,7 +125,7 @@ export default async function ProductTemplatePage({ params }: Props) {
         </Section>
       ) : null}
 
-      <Section labelledBy="details-title" tone={p.highlights?.length ? "surface" : "base"}>
+      <Section labelledBy="details-title">
         <Container className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <SectionHeading id="details-title" title="Details" />
           <dl className="divide-y divide-line border-y border-line">

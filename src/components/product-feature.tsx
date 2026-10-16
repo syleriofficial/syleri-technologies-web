@@ -1,32 +1,32 @@
 import Link from "next/link";
 import { categoryName, productPath, type Product } from "@/content/products";
-import { ProductImage } from "./product-image";
+import { Figure } from "./figure";
 import { StatusMark } from "./product-ledger";
-import { ButtonLink, TextLink } from "./ui/button-link";
+import { ArrowLink, ButtonLink } from "./ui/button-link";
 
 /** Whether a product can be bought right now. */
 export function isPurchasable(p: Product) {
   return p.status === "available" && !!p.checkoutUrl && !!p.price;
 }
 
-/** Version / status / price facts for any product. */
+/** Version / status / price facts for any product, in mono, on a ruled line. */
 export function ProductFacts({ product, className = "" }: { product: Product; className?: string }) {
   return (
-    <dl className={`flex flex-wrap gap-x-8 gap-y-3 text-[0.9375rem] ${className}`}>
+    <dl className={`flex flex-wrap gap-x-8 gap-y-3 ${className}`}>
       <div>
-        <dt className="text-[0.8125rem] text-muted">Version</dt>
-        <dd className="mt-0.5 text-ink">{product.version}</dd>
+        <dt className="type-label text-[0.75rem]">Version</dt>
+        <dd className="mt-1 font-mono text-[0.9375rem] text-ink">{product.version}</dd>
       </div>
       <div>
-        <dt className="text-[0.8125rem] text-muted">Status</dt>
-        <dd className="mt-0.5">
+        <dt className="type-label text-[0.75rem]">Status</dt>
+        <dd className="mt-1 text-[0.9375rem]">
           <StatusMark status={product.status} />
         </dd>
       </div>
       {product.price ? (
         <div>
-          <dt className="text-[0.8125rem] text-muted">Price</dt>
-          <dd className="mt-0.5 text-ink">{product.price.label}</dd>
+          <dt className="type-label text-[0.75rem]">Price</dt>
+          <dd className="mt-1 font-mono text-[0.9375rem] text-ink">{product.price.label}</dd>
         </div>
       ) : null}
     </dl>
@@ -34,133 +34,82 @@ export function ProductFacts({ product, className = "" }: { product: Product; cl
 }
 
 /**
- * Card actions.
- * - "explore" (home page and company contexts): learn more + demo. Never a purchase button.
- * - "catalog" (/products): purchase when available, then product page, then demo as a text link.
+ * Product actions on /products: the purchase button when the product is on
+ * sale, then the product page and the demo as text links.
  */
-export function ProductActions({ product, mode }: { product: Product; mode: "explore" | "catalog" }) {
+export function ProductActions({ product }: { product: Product }) {
   const sr = <span className="sr-only">: {product.name}</span>;
-  if (mode === "catalog" && isPurchasable(product)) {
-    return (
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
-        <ButtonLink href={product.checkoutUrl!}>
+  return (
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+      {isPurchasable(product) ? (
+        <ButtonLink href={product.checkoutUrl!} size="lg">
           Get {product.name} — ${product.price!.amount}
         </ButtonLink>
-        <ButtonLink href={productPath(product)} variant="secondary">
-          View product{sr}
-        </ButtonLink>
-        {product.demoUrl ? (
-          <p className="basis-full text-[0.9375rem] text-muted">
-            Try it first:{" "}
-            <TextLink href={product.demoUrl} newTab>
-              live demo{sr}
-            </TextLink>
-          </p>
-        ) : null}
-      </div>
-    );
-  }
-  return (
-    <div className="flex flex-wrap gap-3">
-      <ButtonLink href={productPath(product)}>
-        {mode === "explore" ? `Explore ${product.name}` : "View product"}
-        {mode === "explore" ? null : sr}
-      </ButtonLink>
+      ) : null}
+      <ArrowLink href={productPath(product)}>
+        View product{sr}
+      </ArrowLink>
       {product.demoUrl ? (
-        <ButtonLink href={product.demoUrl} variant="secondary" newTab>
+        <ArrowLink href={product.demoUrl} newTab>
           Live demo{sr}
-        </ButtonLink>
+        </ArrowLink>
       ) : null}
     </div>
   );
 }
 
-function ProductHeader({ product, as: Heading, size }: { product: Product; as: "h2" | "h3"; size: "lg" | "md" }) {
+function ProductHeader({ product, as: Heading }: { product: Product; as: "h2" | "h3" }) {
   return (
     <>
-      <p className="text-[0.9375rem] text-muted">
+      <p className="type-label">
         {categoryName(product.category)}
-        <span aria-hidden="true" className="mx-2 text-line-strong">
+        <span aria-hidden="true" className="mx-2">
           /
         </span>
         {product.kind}
       </p>
-      <Heading
-        className={
-          size === "lg"
-            ? "mt-2 text-[2rem] font-[680] leading-tight tracking-[-0.03em]"
-            : "mt-1.5 text-[1.375rem] font-[650] leading-snug tracking-[-0.02em]"
-        }
-      >
+      <Heading className="mt-3 text-[2.25rem] font-semibold leading-none tracking-[-0.035em] sm:text-[2.75rem]">
         <Link href={productPath(product)} className="hover:text-accent">
           {product.name}
         </Link>
       </Heading>
-      <p className={`mt-1 font-[560] leading-snug tracking-[-0.01em] text-ink-soft ${size === "lg" ? "text-lg" : ""}`}>
-        {product.subtitle}
-      </p>
+      <p className="mt-3 text-lg font-medium leading-snug tracking-[-0.01em] text-ink-soft">{product.subtitle}</p>
     </>
   );
 }
 
 /**
- * Large product panel for featured products. Works for any product; the
- * image column only appears when the record has a cover.
+ * Featured product entry on /products: facts and actions on the left, a real
+ * screenshot on the right. Ruled, not boxed.
  */
 export function ProductFeature({
   product,
   headingLevel = "h3",
-  mode,
   priority = false,
 }: {
   product: Product;
   headingLevel?: "h2" | "h3";
-  mode: "explore" | "catalog";
   priority?: boolean;
 }) {
-  const hasCover = !!product.cover;
   return (
-    <article className="overflow-hidden rounded-2xl border border-line bg-raised">
-      <div className={hasCover ? "grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" : ""}>
-        <div className="flex flex-col p-6 sm:p-8 lg:p-10">
-          <ProductHeader product={product} as={headingLevel} size="lg" />
-          <p className="mt-4 max-w-[60ch] leading-relaxed text-muted">{product.summary}</p>
-
-          {mode === "catalog" ? (
-            <ProductFacts product={product} className="mt-6 border-y border-line py-4" />
-          ) : product.technology?.length ? (
-            <ul className="mt-6 flex flex-wrap gap-1.5" aria-label={`${product.name} technology`}>
-              {product.technology.map((t) => (
-                <li key={t} className="rounded-md border border-line px-2 py-0.5 text-[0.8125rem] text-ink-soft">
-                  {t}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-
-          <div className="mt-8 lg:mt-auto lg:pt-8">
-            <ProductActions product={product} mode={mode} />
-          </div>
+    <article className="grid gap-10 border-t border-line pt-10 lg:grid-cols-12 lg:gap-x-8">
+      <div className="lg:col-span-5">
+        <ProductHeader product={product} as={headingLevel} />
+        <p className="mt-5 max-w-[56ch] leading-relaxed text-ink-soft">{product.summary}</p>
+        <ProductFacts product={product} className="mt-7 border-y border-line py-4" />
+        <div className="mt-8">
+          <ProductActions product={product} />
         </div>
-        {product.cover ? (
-          <div className="border-t border-line bg-surface p-4 sm:p-6 lg:border-l lg:border-t-0">
-            <ProductImage media={product.cover} priority={priority} sizes="(min-width: 1024px) 55vw, 100vw" />
-          </div>
-        ) : null}
       </div>
-    </article>
-  );
-}
-
-/** Compact product card for grids of secondary products (home page). */
-export function ProductCard({ product }: { product: Product }) {
-  return (
-    <article className="flex h-full flex-col rounded-2xl border border-line bg-raised p-6 sm:p-7">
-      <ProductHeader product={product} as="h3" size="md" />
-      <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">{product.summary}</p>
-      <div className="mt-6 pt-2 md:mt-auto">
-        <ProductActions product={product} mode="explore" />
-      </div>
+      {product.cover ? (
+        <Figure
+          className="lg:col-span-7"
+          caption={product.cover.brief}
+          media={product.cover}
+          eager={priority}
+          sizes="(min-width: 1216px) 670px, (min-width: 1024px) 56vw, calc(100vw - 4rem)"
+        />
+      ) : null}
     </article>
   );
 }
@@ -169,20 +118,20 @@ export function ProductCard({ product }: { product: Product }) {
 export function ProductRow({ product, headingLevel = "h3" }: { product: Product; headingLevel?: "h3" | "h4" }) {
   const Heading = headingLevel;
   return (
-    <article className="grid gap-5 py-7 lg:grid-cols-[minmax(0,1fr)_15rem_24rem] lg:items-center lg:gap-10">
+    <article className="grid gap-5 py-7 lg:grid-cols-[minmax(0,1fr)_15rem_auto] lg:items-center lg:gap-10">
       <div className="min-w-0">
-        <p className="text-[0.875rem] text-muted">{product.kind}</p>
-        <Heading className="mt-0.5 text-[1.25rem] font-[650] tracking-[-0.018em]">
+        <p className="type-label">{product.kind}</p>
+        <Heading className="mt-1 text-[1.25rem] font-semibold tracking-[-0.018em]">
           <Link href={productPath(product)} className="hover:text-accent">
             {product.name}
           </Link>
         </Heading>
-        <p className="mt-0.5 font-[540] text-ink-soft">{product.subtitle}</p>
+        <p className="mt-0.5 font-medium text-ink-soft">{product.subtitle}</p>
         <p className="mt-2 max-w-[62ch] text-[0.9375rem] leading-relaxed text-muted">{product.summary}</p>
       </div>
       <ProductFacts product={product} />
       <div className="lg:flex lg:justify-end">
-        <ProductActions product={product} mode="catalog" />
+        <ProductActions product={product} />
       </div>
     </article>
   );

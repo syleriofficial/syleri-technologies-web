@@ -9,7 +9,7 @@ Syleri Technologies.
 
 - Next.js 16.3 (App Router, static generation), React 19, TypeScript
 - Tailwind CSS 4
-- Self-hosted Schibsted Grotesk variable font (SIL OFL 1.1)
+- Self-hosted fonts: Schibsted Grotesk variable for all text, IBM Plex Mono Regular for technical labels (both SIL OFL 1.1)
 - No CMS, database, auth, analytics or backend. Checkout is handled by Lemon Squeezy.
 
 ## Getting started
@@ -58,8 +58,27 @@ sitemap. Set `productSlug` to link it to a product.
   blue "S" symbol, favicons and Apple touch icons) and are rendered by
   `src/components/logo.tsx`.
 - The logo is the symbol plus "Syleri Technologies" only. The tagline
-  "Technology for what’s next." (`site.tagline`) appears beside it where
-  appropriate (footer, main social card), never inside the logo.
+  "Technology for what’s next." (`site.tagline`) appears on the main social
+  card, never inside the logo.
+
+## Design system
+
+- **Type:** Schibsted Grotesk, weights 400/500/600 only, on the scale in
+  `src/app/globals.css` (`type-display`, `type-product`, `type-title`,
+  `type-h2`, `type-h3`, `type-lead`). IBM Plex Mono (`font-mono`,
+  `type-label`) is only for versions, prices, dates, captions and section
+  labels.
+- **Colour:** paper, ink, muted and the logo's cobalt (actions and links
+  only). The deep-navy `band` colour appears once per page, behind the main
+  product screenshot.
+- **Structure:** sections are separated by hairline rules, never grey bands
+  or cards. Numbered sections use `IndexedSection` (label in the left three
+  columns, content in the right nine); facts use `FactsRow`; two-column
+  rules use `RuledRow` (`src/components/ui/layout.tsx`).
+- **Screenshots:** always real, always captioned (`Figure`, `FigureBand` in
+  `src/components/figure.tsx`). Give a screenshot a `mobile` crop so phones
+  show a readable part of the screen; crops are cut by
+  `scripts/crop-stockline-screenshots.py`.
 
 ## Contact
 

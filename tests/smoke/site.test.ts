@@ -155,6 +155,18 @@ describe("Stockline", () => {
     assert.ok(html.replaceAll("<!-- -->", "").includes("Get Stockline — $49"), "button price");
     assert.match(html, /frontend starter kit/i, "frontend-only positioning");
     assert.match(html, /does not include a backend, database or payment processing/, "disclosure");
+    assert.match(html, /id="not-included"/, "not-included section");
+    assert.match(html, /Production backend/, "production backend listed as not included");
+    const checkoutLinks = html.split(`href="${product.offers.url}"`).length - 1;
+    assert.equal(checkoutLinks, 2, "checkout button in the hero and the price section only");
+  });
+});
+
+describe("home page", () => {
+  it("leads with the approved headline and links to the lead product", async () => {
+    const html = (await (await fetch(base + "/")).text()).replaceAll("<!-- -->", "");
+    assert.match(html, /<h1[^>]*>Start with the interface\.\s*(<br[^>]*>)?\s*Build the rest your way\.<\/h1>/);
+    assert.match(html, /href="\/products\/stockline"/);
   });
 });
 

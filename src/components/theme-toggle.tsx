@@ -47,7 +47,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       type="button"
       onClick={toggle}
       aria-label={theme ? `Switch to ${next} theme` : "Toggle theme"}
-      className={`inline-flex size-10 items-center justify-center rounded-[0.625rem] text-ink-soft transition-colors hover:bg-surface hover:text-ink ${className}`}
+      className={`inline-flex size-10 items-center justify-center rounded-md text-ink-soft transition-colors hover:bg-surface hover:text-ink ${className}`}
     >
       {/* Both icons render on the server; CSS picks the right one so there is no flash. */}
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-[1.125rem] dark:hidden">

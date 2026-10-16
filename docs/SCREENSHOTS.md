@@ -23,6 +23,20 @@ public/products/stockline/screenshots/
 | 7 | `07-roles-permissions.png` | Roles & permissions screen                | Stockline modules                        |
 | 8 | `08-dark-mode.png`         | Dashboard, dark theme                     | Stockline themes                         |
 
+## Readable crops
+
+Phones and narrow figure slots show a crop of a capture instead of the whole
+screen shrunk to fit. Crops live in `screenshots/crops/` and are cut from the
+files above by:
+
+```
+python3 scripts/crop-stockline-screenshots.py
+```
+
+The crop regions are listed at the top of that script. Re-run it whenever a
+source capture is replaced, and check the crop still shows what its `alt`
+text in `media.ts` says.
+
 ## Capture guidelines
 
 - Capture from the real Stockline production build at a **1600×1000** browser

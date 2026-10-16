@@ -2,7 +2,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { ProductFeature, ProductRow } from "@/components/product-feature";
 import { ProductLedger } from "@/components/product-ledger";
-import { Container } from "@/components/ui/layout";
+import { Container, SectionIndex } from "@/components/ui/layout";
 import { products, productsByCategory } from "@/content/products";
 import { updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
@@ -21,6 +21,8 @@ export default function ProductsPage() {
   const groups = productsByCategory();
   const latest = updates.find((u) => u.kind === "release");
   const showIndex = products.length >= INDEX_THRESHOLD;
+  // Category headings only help once there is more than one category.
+  const showCategories = groups.length > 1;
 
   return (
     <>
@@ -31,55 +33,38 @@ export default function ProductsPage() {
         ])}
       />
 
-      <section aria-labelledby="products-title" className="border-b border-line">
-        <Container className="pb-14 pt-14 sm:pb-20 sm:pt-20">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-16">
-            <div>
+      <section aria-labelledby="products-title">
+        <Container className="pb-12 pt-14 sm:pb-16 sm:pt-20">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-x-8">
+            <div className="lg:col-span-8">
               <h1 id="products-title" className="type-title">
                 Products
               </h1>
-              <p className="type-lead mt-5 max-w-[50ch]">
-                Every Syleri Technologies product, with its category, current version and availability. The catalog grows
-                as new products are released.
+              <p className="type-lead mt-5 max-w-[46ch]">
+                Every Syleri Technologies product, with its version, availability and price. New products are added here
+                when they are released.
               </p>
             </div>
-            <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-line pt-5 text-[0.9375rem] lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-              {showIndex ? (
-                <>
-                  <div>
-                    <dt className="text-muted">Products</dt>
-                    <dd className="mt-0.5 text-[1.75rem] font-[650] tabular-nums leading-tight tracking-[-0.02em]">{products.length}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted">Categories</dt>
-                    <dd className="mt-0.5 text-[1.75rem] font-[650] tabular-nums leading-tight tracking-[-0.02em]">{groups.length}</dd>
-                  </div>
-                </>
-              ) : null}
-              {latest ? (
-                <div className="col-span-2">
-                  <dt className="text-muted">Latest release</dt>
-                  <dd className="mt-0.5">
-                    <Link href={`/updates/${latest.slug}`} className="text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
-                      {latest.title}
-                    </Link>
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
+            {latest ? (
+              <dl className="lg:col-span-4 lg:justify-self-end">
+                <dt className="type-label text-[0.75rem]">Latest release</dt>
+                <dd className="mt-1">
+                  <Link href={`/updates/${latest.slug}`} className="font-mono text-[0.9375rem] text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent">
+                    {latest.title}
+                  </Link>
+                  {latest.date ? <span className="type-label"> · {latest.date}</span> : null}
+                </dd>
+              </dl>
+            ) : null}
           </div>
 
-          {groups.length > 1 ? (
+          {showCategories ? (
             <nav aria-label="Product categories" className="mt-10">
-              <ul className="flex flex-wrap gap-2">
+              <ul className="flex flex-wrap gap-x-6 gap-y-2">
                 {groups.map(({ category, items }) => (
                   <li key={category.id}>
-                    <a
-                      href={`#${category.id}`}
-                      className="inline-flex h-9 items-center gap-2 rounded-lg border border-line px-3 text-[0.9375rem] text-ink-soft hover:border-line-strong hover:text-ink"
-                    >
-                      {category.name}
-                      <span className="tabular-nums text-muted">{items.length}</span>
+                    <a href={`#${category.id}`} className="text-[0.9375rem] text-ink-soft hover:text-accent">
+                      {category.name} <span className="font-mono text-[0.8125rem] text-muted">{items.length}</span>
                     </a>
                   </li>
                 ))}
@@ -87,11 +72,7 @@ export default function ProductsPage() {
             </nav>
           ) : null}
 
-          {showIndex ? (
-            <div className="mt-12 hidden md:block">
-              <ProductLedger items={products} headingId="directory-title" heading="Directory" footnote={null} />
-            </div>
-          ) : null}
+          {showIndex ? <ProductLedger className="mt-12 hidden md:block" items={products} /> : null}
         </Container>
       </section>
 
@@ -106,33 +87,34 @@ export default function ProductsPage() {
         const rest = items.filter((p) => !p.featured);
         const headingId = `${category.id}-title`;
         return (
-          <section
-            key={category.id}
-            id={category.id}
-            aria-labelledby={headingId}
-            className={`scroll-mt-20 py-16 sm:py-24 ${gi % 2 === 1 ? "bg-surface" : ""}`}
-          >
+          <section key={category.id} id={category.id} aria-labelledby={headingId} className="scroll-mt-20 pb-20 sm:pb-28">
             <Container>
-              <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-                <div className="max-w-[44rem]">
-                  <h2 id={headingId} className="type-h2">
-                    {category.name}
-                  </h2>
-                  <p className="mt-4 text-lg leading-relaxed text-muted">{category.description}</p>
+              {showCategories ? (
+                <div className="mb-8 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+                  <div>
+                    <SectionIndex index={String(gi + 1).padStart(2, "0")}>{category.name}</SectionIndex>
+                    <h2 id={headingId} className="type-h2 mt-3">
+                      {category.name}
+                    </h2>
+                    <p className="mt-3 max-w-[60ch] text-ink-soft">{category.description}</p>
+                  </div>
                 </div>
-                {items.length > 1 ? <p className="text-[0.9375rem] tabular-nums text-muted">{items.length} products</p> : null}
-              </div>
+              ) : (
+                <h2 id={headingId} className="sr-only">
+                  {category.name}
+                </h2>
+              )}
 
               {featured.length ? (
-                <div className="mt-10 space-y-8">
+                <div className="space-y-16">
                   {featured.map((p, i) => (
-                    <ProductFeature key={p.slug} product={p} mode="catalog" priority={gi === 0 && i === 0} />
+                    <ProductFeature key={p.slug} product={p} priority={gi === 0 && i === 0} />
                   ))}
                 </div>
               ) : null}
 
               {rest.length ? (
-                <ul className={`border-t border-line ${featured.length ? "mt-12" : "mt-10"}`}>
+                <ul className={`border-t border-line ${featured.length ? "mt-16" : ""}`}>
                   {rest.map((p) => (
                     <li key={p.slug} className="border-b border-line">
                       <ProductRow product={p} />

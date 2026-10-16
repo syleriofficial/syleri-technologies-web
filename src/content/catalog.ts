@@ -24,13 +24,13 @@ export type CategoryId = (typeof categories)[number]["id"];
 export const focusAreas = [
   {
     id: "business-operations",
-    title: "Business operations",
-    body: "Software for the everyday work of running a business — selling, stock, purchasing and reporting — where clarity and reliability matter more than novelty.",
+    title: "Business software",
+    body: "Selling, stock, purchasing and reporting — the daily work of running a shop or a warehouse.",
   },
   {
     id: "developer-tools",
-    title: "Developer tools",
-    body: "Foundations and tooling that help engineering teams start from well-structured, typed, documented code instead of a blank repository.",
+    title: "Developer foundations",
+    body: "Typed, documented starting points, so a team builds the product instead of the scaffolding.",
   },
 ] as const satisfies readonly { id: string; title: string; body: string }[];
 

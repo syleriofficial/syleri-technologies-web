@@ -22,8 +22,8 @@ export function Notice({
       ? "border-notice-line bg-notice text-notice-ink"
       : "border-line-strong bg-raised text-ink-soft";
   return (
-    <div role={role ?? "note"} className={`rounded-xl border px-5 py-4 ${toneCls} ${className}`}>
-      <p className="font-[620] text-current">{title}</p>
+    <div role={role ?? "note"} className={`rounded-md border px-5 py-4 ${toneCls} ${className}`}>
+      <p className="font-semibold text-current">{title}</p>
       <div className="mt-1 text-[0.9375rem] leading-relaxed">{children}</div>
     </div>
   );

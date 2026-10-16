@@ -2,42 +2,31 @@ import Link from "next/link";
 import { categoryName, productPath, type Product, statusLabel } from "@/content/products";
 
 /**
- * The product index — a compact table of every product with the same four
- * facts. With `limit`, it shows the first N and links to the full directory,
- * so it stays tidy at 10+ products.
+ * The product index — a ruled table of every product with the same facts.
+ * With `limit`, it shows the first N and links to the full directory, so it
+ * stays tidy at 10+ products.
  */
 export function ProductLedger({
   items,
-  headingId,
-  heading = "Product index",
   limit,
-  footnote = "New products are added to this index when they are released.",
   compact = false,
+  className = "",
 }: {
   items: Product[];
-  headingId: string;
-  heading?: string;
   limit?: number;
-  footnote?: string | null;
-  /** Two columns (product, status) for narrow placements such as the home hero. */
+  /** Product and status only, for narrow placements. */
   compact?: boolean;
+  className?: string;
 }) {
-  const row = compact ? "ledger-row-compact" : "ledger-row";
   const shown = limit ? items.slice(0, limit) : items;
   const hidden = items.length - shown.length;
+  const cols = compact
+    ? "md:grid-cols-[minmax(0,1fr)_8rem]"
+    : "md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_6rem_8rem]";
 
   return (
-    <div className="rounded-2xl border border-line bg-raised">
-      <div className="flex items-baseline justify-between gap-4 border-b border-line px-5 py-3.5 sm:px-6">
-        <h2 id={headingId} className="text-[0.9375rem] font-[620] text-ink">
-          {heading}
-        </h2>
-        <span className="text-[0.875rem] tabular-nums text-muted">
-          {items.length} {items.length === 1 ? "product" : "products"}
-        </span>
-      </div>
-
-      <div className={`${row} hidden border-b border-line px-6 py-2.5 text-[0.8125rem] text-muted md:grid`} aria-hidden="true">
+    <div className={className}>
+      <div className={`type-label hidden gap-6 border-b border-line pb-3 text-[0.75rem] md:grid ${cols}`} aria-hidden="true">
         <span>Product</span>
         {compact ? null : <span>Category</span>}
         {compact ? null : <span>Version</span>}
@@ -45,14 +34,14 @@ export function ProductLedger({
       </div>
 
       {items.length === 0 ? (
-        <p className="px-6 py-6 text-[0.9375rem] text-muted">No products are listed yet.</p>
+        <p className="border-y border-line py-6 text-[0.9375rem] text-muted">No products are listed yet.</p>
       ) : (
-        <ul>
+        <ul className="border-t border-line md:border-t-0">
           {shown.map((p) => (
-            <li key={p.slug} className="border-b border-line last:border-b-0">
-              <Link href={productPath(p)} className={`${row} group px-5 py-4 transition-colors hover:bg-surface sm:px-6`}>
+            <li key={p.slug} className="border-b border-line">
+              <Link href={productPath(p)} className={`group grid gap-1 py-4 md:items-baseline md:gap-6 ${cols}`}>
                 <span className="min-w-0">
-                  <span className="block text-[1.0625rem] font-[620] tracking-[-0.01em] text-ink group-hover:text-accent">
+                  <span className="block text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink group-hover:text-accent">
                     {p.name}
                   </span>
                   <span className="block text-[0.9375rem] text-muted">{p.subtitle}</span>
@@ -63,8 +52,8 @@ export function ProductLedger({
                       <span className="text-muted md:hidden">Category: </span>
                       {categoryName(p.category)}
                     </span>
-                    <span className="text-[0.9375rem] text-ink-soft">
-                      <span className="text-muted md:hidden">Version: </span>
+                    <span className="font-mono text-[0.875rem] text-ink-soft">
+                      <span className="font-sans text-muted md:hidden">Version: </span>
                       {p.version}
                     </span>
                   </>
@@ -80,14 +69,9 @@ export function ProductLedger({
       )}
 
       {hidden > 0 ? (
-        <Link
-          href="/products"
-          className="block border-t border-line px-5 py-3.5 text-[0.9375rem] font-[560] text-ink hover:bg-surface hover:text-accent sm:px-6"
-        >
-          View all {items.length} products
+        <Link href="/products" className="mt-4 inline-block text-[0.9375rem] font-medium text-accent hover:text-accent-hover">
+          View all {items.length} products →
         </Link>
-      ) : footnote ? (
-        <p className="border-t border-dashed border-line px-5 py-3.5 text-[0.875rem] text-muted sm:px-6">{footnote}</p>
       ) : null}
     </div>
   );
