@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Privacy",
-  description: "How the Syleri Technologies website handles information.",
+  description: "How the Syleri Technologies website handles information: no analytics or tracking, what the contact form collects, and how purchases are processed.",
   path: "/privacy",
 });
 

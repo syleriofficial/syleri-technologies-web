@@ -13,10 +13,10 @@ export function SiteHeader() {
         <Link href="/" className="-mx-1 flex shrink-0 items-center rounded px-1" aria-label="Syleri Technologies home">
           {/* Full lockup at every width from 360px up; the symbol alone only on very narrow screens. */}
           <span className="hidden min-[22.5rem]:block">
-            <Logo className="h-9 md:h-11" priority />
+            <Logo className="h-9 md:h-11" />
           </span>
           <span className="min-[22.5rem]:hidden">
-            <LogoSymbol className="h-8" priority />
+            <LogoSymbol className="h-8" />
           </span>
         </Link>
 

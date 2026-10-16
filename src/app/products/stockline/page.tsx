@@ -13,6 +13,10 @@ export const metadata = productMetadata(stockline);
 
 const CHECKOUT = stockline.checkoutUrl!;
 const DEMO = stockline.demoUrl!;
+// Prices come from the product record so the page, structured data and
+// /products can never disagree.
+const PRICE = `$${stockline.price!.amount}`;
+const REGULAR_PRICE = stockline.price!.regularAmount ? `$${stockline.price!.regularAmount}` : null;
 const PURCHASE_NOTE = "One-time purchase · Standard License · Source code included";
 
 const jumpLinks = [
@@ -83,7 +87,7 @@ export default function StocklinePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <ButtonLink href={CHECKOUT} size="lg">
-                  Get Stockline — $49
+                  Get Stockline — {PRICE}
                 </ButtonLink>
                 <ButtonLink href={DEMO} size="lg" variant="secondary" newTab>
                   View Live Demo
@@ -285,12 +289,14 @@ export default function StocklinePage() {
           <div className="rounded-2xl border border-line-strong bg-raised p-6 sm:p-8">
             <h3 className="text-[1.0625rem] font-[620]">Stockline Standard License</h3>
             <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="text-[3rem] font-[700] leading-none tracking-[-0.04em] tabular-nums">$49</span>
-              <span className="text-muted">
-                launch price · <span className="line-through">$69</span>
-                <span className="sr-only"> regular price</span>
-                <span aria-hidden="true"> regular</span>
-              </span>
+              <span className="text-[3rem] font-[700] leading-none tracking-[-0.04em] tabular-nums">{PRICE}</span>
+              {REGULAR_PRICE ? (
+                <span className="text-muted">
+                  launch price · <span className="line-through">{REGULAR_PRICE}</span>
+                  <span className="sr-only"> regular price</span>
+                  <span aria-hidden="true"> regular</span>
+                </span>
+              ) : null}
             </p>
             <ul className="mt-6 grid gap-2.5 border-t border-line pt-6 sm:grid-cols-2">
               {pricingIncludes.map((item) => (
@@ -302,7 +308,7 @@ export default function StocklinePage() {
             </ul>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ButtonLink href={CHECKOUT} size="lg">
-                Get Stockline — $49
+                Get Stockline — {PRICE}
               </ButtonLink>
               <ButtonLink href={DEMO} size="lg" variant="secondary" newTab>
                 View Live Demo
@@ -356,7 +362,7 @@ export default function StocklinePage() {
           </h2>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href={CHECKOUT} size="lg">
-              Get Stockline — $49
+              Get Stockline — {PRICE}
             </ButtonLink>
             <ButtonLink href={DEMO} size="lg" variant="secondary" newTab>
               View Live Demo

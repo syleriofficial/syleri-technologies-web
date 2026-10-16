@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContactForm } from "@/app/contact/actions";
-import type { ContactFields, ContactFormState } from "@/lib/contact/types";
+import { HONEYPOT_FIELD_NAME, type ContactFields, type ContactFormState } from "@/lib/contact/types";
 
 const initialState: ContactFormState = { status: "idle" };
 
@@ -25,7 +25,7 @@ function SubmitButton() {
     >
       {pending ? (
         <>
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4 animate-spin">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none">
             <circle cx="10" cy="10" r="7" stroke="currentColor" strokeOpacity="0.3" strokeWidth="2" />
             <path d="M17 10a7 7 0 0 0-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -169,7 +169,16 @@ export function ContactForm() {
               visitors never populate this; anything that does is automated. */}
           <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
             <label htmlFor={honeypotId}>Leave this field empty</label>
-            <input id={honeypotId} name="company" type="text" tabIndex={-1} autoComplete="off" />
+            <input
+              id={honeypotId}
+              name={HONEYPOT_FIELD_NAME}
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              data-1p-ignore
+              data-lpignore="true"
+              data-bwignore
+            />
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">

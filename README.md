@@ -3,7 +3,7 @@
 Source for **syleritechnologies.com**, the corporate and product website of
 Syleri Technologies.
 
-> Not deployed. This repository is awaiting independent audit and approval.
+> Live at https://syleritechnologies.com — deployed by Vercel from `main`.
 
 ## Stack
 
@@ -19,8 +19,13 @@ npm ci
 npm run dev        # http://localhost:3000
 npm run typecheck
 npm run lint
+npm test           # unit tests (Node's built-in test runner, no extra dependencies)
 npm run build
+npm run test:smoke # starts the production build and checks every public page
 ```
+
+CI (`.github/workflows/ci.yml`) runs all of the above, plus a production
+dependency audit, on every pull request and push to `main`.
 
 ## Where content lives
 

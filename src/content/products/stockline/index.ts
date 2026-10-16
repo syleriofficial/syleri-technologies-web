@@ -47,7 +47,7 @@ export const stockline: Product = {
   seo: {
     title: "Stockline — POS & Inventory Management Next.js Dashboard",
     description:
-      "Build POS and inventory software faster with Stockline, a premium Next.js and TypeScript frontend starter kit for sales, stock, warehouses, purchasing, reports, customers, roles and more.",
+      "Stockline is a Next.js and TypeScript frontend starter kit for POS and inventory software: sales, stock, warehouses, purchasing, reports, customers and roles.",
   },
   schema: {
     category: "Developer Tool / Frontend Starter Kit",

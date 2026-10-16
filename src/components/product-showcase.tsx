@@ -3,8 +3,8 @@ import { productPath, type Product, type ProductMedia } from "@/content/products
 import { ButtonLink, ExternalIcon, TextLink } from "./ui/button-link";
 import { Container } from "./ui/layout";
 
-/** Rendered width of the showcase image: the container's content box. */
-const SHOWCASE_SIZES = "(min-width: 1280px) 1216px, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)";
+/** Rendered width of the showcase image: the container's content box (76rem minus 2 x 2rem padding). */
+const SHOWCASE_SIZES = "(min-width: 1216px) 1152px, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)";
 
 function ShowcaseImage({ media, className }: { media: ProductMedia; className: string }) {
   return (
