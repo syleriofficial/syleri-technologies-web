@@ -159,6 +159,9 @@ describe("Stockline", () => {
     assert.match(html, /Production backend/, "production backend listed as not included");
     const checkoutLinks = html.split(`href="${product.offers.url}"`).length - 1;
     assert.equal(checkoutLinks, 2, "checkout button in the hero and the price section only");
+    for (const id of ["pos", "modules", "frontend-only", "pricing", "license", "faq"]) {
+      assert.match(html, new RegExp(`id="${id}"`), `in-page link #${id} still resolves`);
+    }
   });
 });
 

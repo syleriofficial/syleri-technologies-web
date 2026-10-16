@@ -21,6 +21,21 @@ const REGULAR_PRICE = stockline.price!.regularAmount ? `$${stockline.price!.regu
 const RELEASE = latestRelease(stockline.slug);
 
 /** Wide figures span the container; the 2-up pair takes half each from 768px. */
+/**
+ * Section ids from the previous version of this page. Links elsewhere may
+ * still use them, so each one is kept as a zero-height anchor where that
+ * content now lives.
+ */
+function LegacyAnchors({ ids }: { ids: string[] }) {
+  return (
+    <>
+      {ids.map((id) => (
+        <span key={id} id={id} aria-hidden="true" className="block scroll-mt-20" />
+      ))}
+    </>
+  );
+}
+
 const WIDE_SIZES = "(min-width: 1216px) 1152px, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)";
 const HALF_SIZES = "(min-width: 1216px) 560px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 4rem)";
 
@@ -87,6 +102,7 @@ export default function StocklinePage() {
         </Container>
       </section>
 
+      <LegacyAnchors ids={["pos"]} />
       <FigureBand
         media={media.pos}
         index="01"
@@ -100,6 +116,7 @@ export default function StocklinePage() {
       />
 
       {/* 01 Screens */}
+      <LegacyAnchors ids={["dashboard", "modules", "themes"]} />
       <IndexedSection
         id="screens"
         index="01"
@@ -146,6 +163,7 @@ export default function StocklinePage() {
       />
 
       {/* 02 Built with */}
+      <LegacyAnchors ids={["developer-experience", "included"]} />
       <IndexedSection id="built-with" index="02" label="Built with" title="A stack you already know, typed end to end.">
         <div className="mt-10 grid gap-10 md:grid-cols-2 md:gap-12">
           <dl className="border-t border-line">
@@ -176,6 +194,7 @@ export default function StocklinePage() {
       </IndexedSection>
 
       {/* 03 Not included */}
+      <LegacyAnchors ids={["frontend-only"]} />
       <IndexedSection
         id="not-included"
         index="03"
@@ -214,6 +233,7 @@ export default function StocklinePage() {
       </IndexedSection>
 
       {/* 05 Price and license — the one place the license is stated */}
+      <LegacyAnchors ids={["license"]} />
       <IndexedSection id="pricing" index="05" label="Price and license" hideTitle>
         <div className="grid gap-12 md:grid-cols-2 md:gap-12">
           <div>

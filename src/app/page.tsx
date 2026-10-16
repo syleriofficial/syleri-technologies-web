@@ -138,7 +138,7 @@ export default function HomePage() {
               <li key={u.slug} className="border-b border-line">
                 <Link
                   href={`/updates/${u.slug}`}
-                  className="group grid gap-1 py-5 sm:grid-cols-[8.5rem_11rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6"
+                  className="group grid gap-1 py-5 md:grid-cols-[8.5rem_11rem_minmax(0,1fr)_auto] md:items-baseline md:gap-6"
                 >
                   {u.date ? (
                     <time dateTime={u.date} className="font-mono text-[0.875rem] text-muted">
@@ -149,7 +149,7 @@ export default function HomePage() {
                   )}
                   <span className="font-mono text-[0.875rem] text-ink">{u.title}</span>
                   <span className="text-ink-soft">{u.summary}</span>
-                  <span aria-hidden="true" className="hidden font-medium text-accent group-hover:text-accent-hover sm:inline">
+                  <span aria-hidden="true" className="hidden font-medium text-accent group-hover:text-accent-hover md:inline">
                     Read →
                   </span>
                 </Link>
