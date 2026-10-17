@@ -30,7 +30,7 @@ export type Update = {
   links?: { label: string; href: string; external?: boolean }[];
 };
 
-export const updates: Update[] = [
+const entries: Update[] = [
   {
     slug: "stockline-1-0-0",
     title: "Stockline 1.0.0",
@@ -51,6 +51,15 @@ export const updates: Update[] = [
   },
 ];
 
+/**
+ * Newest first, whatever order entries were added in. Undated entries (date
+ * not yet confirmed) stay first, in the order written.
+ */
+export const updates: Update[] = entries
+  .map((u, i) => ({ u, i }))
+  .sort((a, b) => (b.u.date ?? "9999").localeCompare(a.u.date ?? "9999") || a.i - b.i)
+  .map(({ u }) => u);
+
 export const updateKindLabel: Record<UpdateKind, string> = {
   release: "Release",
   announcement: "Announcement",
@@ -60,7 +69,7 @@ export function getUpdate(slug: string) {
   return updates.find((u) => u.slug === slug);
 }
 
-/** Most recent release for a product (entries are kept newest first). */
+/** Most recent release for a product. */
 export function latestRelease(productSlug: string) {
   return updates.find((u) => u.kind === "release" && u.productSlug === productSlug);
 }

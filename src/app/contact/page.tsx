@@ -43,10 +43,6 @@ export default function ContactPage() {
                 <dd className="font-mono text-[0.875rem] text-ink">{websiteLabel}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
-                <dt className="text-muted">Location</dt>
-                <dd className="text-ink">India</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
                 <dt className="text-muted">Products</dt>
                 <dd>
                   <Link href="/products" className="font-medium text-accent hover:text-accent-hover">

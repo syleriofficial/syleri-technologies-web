@@ -105,6 +105,19 @@ export default function DevelopersPage() {
           <p className="type-lead mt-5 max-w-[48ch]">
             Documentation, demos and release notes for Syleri Technologies developer products.
           </p>
+          {devProducts.length > 1 ? (
+            <nav aria-label="Developer products" className="mt-10">
+              <ul className="flex flex-wrap gap-x-6 border-y border-line py-1">
+                {devProducts.map((p) => (
+                  <li key={p.slug}>
+                    <a href={`#res-${p.slug}`} className="inline-flex min-h-11 items-center text-[0.9375rem] text-ink-soft hover:text-accent">
+                      {p.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
         </Container>
       </section>
 

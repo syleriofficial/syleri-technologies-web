@@ -6,8 +6,12 @@
 export const companyStatement = {
   /** Home hero headline. Two sentences; the page breaks the line between them on wide screens. */
   headline: ["Start with the interface.", "Build the rest your way."],
-  /** Home hero supporting copy. */
-  lead: "Syleri Technologies builds frontend foundations for business applications. Stockline is a Next.js POS and inventory dashboard starter kit, with working interface screens you can explore before buying.",
+  /**
+   * Home hero supporting copy: the company, in terms that hold as the catalog
+   * grows. While there is a single product, the page adds one factual
+   * sentence about it from its record (`pitch`).
+   */
+  lead: "Syleri Technologies builds software, platforms and technology products, and releases each one when it is ready to be relied on.",
 };
 
 /**
@@ -15,9 +19,9 @@ export const companyStatement = {
  * the evidence. `link` names which product resource the statement points to;
  * pages resolve it from the product record so the link never goes stale.
  */
-export const workStatements: { body: string; link: "demo" | "not-included" | "release-notes" }[] = [
-  { body: "Every screen is open in a live demo.", link: "demo" },
-  { body: "Each product page lists what it doesn’t include.", link: "not-included" },
+export const workStatements: { body: string; link: "demo" | "scope" | "release-notes" }[] = [
+  { body: "Where a product has a live demo, you can try it before you buy.", link: "demo" },
+  { body: "Each product page states what it does and doesn’t include.", link: "scope" },
   { body: "Every release is written up with what changed.", link: "release-notes" },
 ];
 

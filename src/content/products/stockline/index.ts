@@ -7,6 +7,7 @@ export const stockline: Product = {
   category: "developer-tools",
   kind: "Frontend starter kit",
   subtitle: "POS & Inventory Management Dashboard for Next.js",
+  pitch: "a Next.js POS and inventory dashboard starter kit, with working interface screens you can explore before buying",
   summary:
     "A production-quality frontend starter kit for building retail, inventory, warehouse, purchasing, sales and operational software.",
   version: "1.0.0",

@@ -1,21 +1,17 @@
 import Link from "next/link";
-import { developerProducts, productPath, products } from "@/content/products";
+import { productPath, products } from "@/content/products";
 import { site } from "@/content/site";
 import { LogoSymbol } from "./logo";
 import { Container } from "./ui/layout";
 
 type FooterLink = { label: string; href: string; external?: boolean };
 
-/** Caps keep the footer to one or two lines as the catalog grows; the rest is on /products. */
+/** Keeps the footer to one line as the catalog grows; the rest is on /products. */
 const MAX_PRODUCT_LINKS = 3;
-const MAX_DEMO_LINKS = 2;
 
 function footerLinks(): { main: FooterLink[]; legal: FooterLink[] } {
+  // A few product names for quick access; the full catalog, demos included, is on /products and /developers.
   const productLinks: FooterLink[] = products.slice(0, MAX_PRODUCT_LINKS).map((p) => ({ label: p.name, href: productPath(p) }));
-  const demoLinks: FooterLink[] = developerProducts()
-    .filter((p) => p.demoUrl)
-    .slice(0, MAX_DEMO_LINKS)
-    .map((p) => ({ label: `${p.name} demo`, href: p.demoUrl!, external: true }));
 
   return {
     main: [
@@ -23,7 +19,6 @@ function footerLinks(): { main: FooterLink[]; legal: FooterLink[] } {
       ...productLinks,
       { label: "Company", href: "/company" },
       { label: "Developers", href: "/developers" },
-      ...demoLinks,
       { label: "Updates", href: "/updates" },
       { label: "Contact", href: "/contact" },
     ],
@@ -74,8 +69,8 @@ export function SiteFooter() {
           <Link href="/" className="-mx-1 inline-flex rounded px-1" aria-label="Syleri Technologies home">
             <LogoSymbol className="h-6" />
           </Link>
-          <p className="type-label">
-            © {site.copyrightYear} {site.name} · India
+          <p className="type-label whitespace-nowrap">
+            © {site.copyrightYear} {site.name}
           </p>
         </div>
       </Container>

@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { ProductFeature, ProductRow } from "@/components/product-feature";
 import { ProductLedger } from "@/components/product-ledger";
 import { Container, SectionIndex } from "@/components/ui/layout";
-import { products, productsByCategory } from "@/content/products";
+import { productsByCategory } from "@/content/products";
 import { updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -14,13 +14,14 @@ export const metadata = pageMetadata({
   path: "/products",
 });
 
-/** The compact index table appears once the catalog is large enough to need an overview. */
-const INDEX_THRESHOLD = 3;
+/** Featured products get the large entry with a screenshot; more than this per category would bury the rest. */
+const MAX_FEATURED_PER_CATEGORY = 2;
+/** Up to this many other products per category show as full rows; beyond it, a compact ruled index. */
+const MAX_ROWS_PER_CATEGORY = 6;
 
 export default function ProductsPage() {
   const groups = productsByCategory();
   const latest = updates.find((u) => u.kind === "release");
-  const showIndex = products.length >= INDEX_THRESHOLD;
   // Category headings only help once there is more than one category.
   const showCategories = groups.length > 1;
 
@@ -60,10 +61,10 @@ export default function ProductsPage() {
 
           {showCategories ? (
             <nav aria-label="Product categories" className="mt-10">
-              <ul className="flex flex-wrap gap-x-6 gap-y-2">
+              <ul className="flex flex-wrap gap-x-6 border-y border-line py-1">
                 {groups.map(({ category, items }) => (
                   <li key={category.id}>
-                    <a href={`#${category.id}`} className="text-[0.9375rem] text-ink-soft hover:text-accent">
+                    <a href={`#${category.id}`} className="inline-flex min-h-11 items-center gap-1.5 text-[0.9375rem] text-ink-soft hover:text-accent">
                       {category.name} <span className="font-mono text-[0.8125rem] text-muted">{items.length}</span>
                     </a>
                   </li>
@@ -72,7 +73,6 @@ export default function ProductsPage() {
             </nav>
           ) : null}
 
-          {showIndex ? <ProductLedger className="mt-12 hidden md:block" items={products} /> : null}
         </Container>
       </section>
 
@@ -83,8 +83,9 @@ export default function ProductsPage() {
       ) : null}
 
       {groups.map(({ category, items }, gi) => {
-        const featured = items.filter((p) => p.featured);
-        const rest = items.filter((p) => !p.featured);
+        const featured = items.filter((p) => p.featured).slice(0, MAX_FEATURED_PER_CATEGORY);
+        const rest = items.filter((p) => !featured.includes(p));
+        const compactRest = rest.length > MAX_ROWS_PER_CATEGORY;
         const headingId = `${category.id}-title`;
         return (
           <section key={category.id} id={category.id} aria-labelledby={headingId} className="scroll-mt-20 pb-20 sm:pb-28">
@@ -113,7 +114,9 @@ export default function ProductsPage() {
                 </div>
               ) : null}
 
-              {rest.length ? (
+              {compactRest ? (
+                <ProductLedger className={featured.length ? "mt-16" : ""} items={rest} hideCategory />
+              ) : rest.length ? (
                 <ul className={`border-t border-line ${featured.length ? "mt-16" : ""}`}>
                   {rest.map((p) => (
                     <li key={p.slug} className="border-b border-line">

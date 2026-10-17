@@ -25,7 +25,7 @@ export const focusAreas = [
   {
     id: "business-operations",
     title: "Business software",
-    body: "Selling, stock, purchasing and reporting — the daily work of running a shop or a warehouse.",
+    body: "Software for the everyday work of running a business: selling, stock, purchasing and reporting.",
   },
   {
     id: "developer-tools",

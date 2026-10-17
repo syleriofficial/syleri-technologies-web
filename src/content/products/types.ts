@@ -60,6 +60,11 @@ export type Product = {
   kind: string;
   /** One-line positioning statement shown under the name. */
   subtitle: string;
+  /**
+   * Optional short factual phrase that completes "Our first release is
+   * <name>, …" on the home page while this is the only product.
+   */
+  pitch?: string;
   /** Short paragraph used on cards, rows and the template page. */
   summary: string;
   version: string;

@@ -93,6 +93,8 @@ describe("public pages", () => {
       for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
         assert.doesNotThrow(() => JSON.parse(block[1]!), "valid JSON-LD");
       }
+      // The site publishes no location or address; legal pages would need review before adding one.
+      assert.doesNotMatch(html, /\bIndia\b/, "no location in page source");
       assert.ok(!html.includes("mailto:"), "no mailto links");
       assert.ok(!EMAIL.test(html), "no email address in page source");
     });
@@ -170,6 +172,10 @@ describe("home page", () => {
     const html = (await (await fetch(base + "/")).text()).replaceAll("<!-- -->", "");
     assert.match(html, /<h1[^>]*>Start with the interface\.\s*(<br[^>]*>)?\s*Build the rest your way\.<\/h1>/);
     assert.match(html, /href="\/products\/stockline"/);
+    // With one product, the hero names it factually; the company line stays broad.
+    assert.match(html, /builds software, platforms and technology products/);
+    assert.match(html, /Our first release is Stockline, a Next\.js POS and inventory dashboard starter kit/);
+    assert.match(html, /href="\/updates"/, "release notes link");
   });
 });
 

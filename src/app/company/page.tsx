@@ -35,14 +35,12 @@ export default function CompanyPage() {
           </h1>
           <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-x-8">
             <p className="type-lead lg:col-span-6">
-              We build frontend foundations for business applications, and release each product when it is ready to be
-              relied on.
+              We build software, platforms and technology products, and release each one when it is ready to be relied
+              on.
             </p>
             <p className="max-w-[52ch] leading-relaxed text-ink-soft lg:col-span-5 lg:col-start-8">
-              Based in India.
               {firstRelease && firstProduct ? (
                 <>
-                  {" "}
                   Our first product, {firstProduct.name}, was released on{" "}
                   <time dateTime={firstRelease.date!}>{formatDate(firstRelease.date!)}</time>.
                 </>
@@ -53,7 +51,7 @@ export default function CompanyPage() {
         </Container>
       </section>
 
-      <IndexedSection id="work" index="01" label="What we work on" title="Business operations, and the code behind them.">
+      <IndexedSection id="work" index="01" label="What we work on" title="The areas we work in today.">
         <div className="mt-10 border-t border-line">
           {focusAreas.map((area) => {
             const inArea = productsInArea(area.id);

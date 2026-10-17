@@ -4,9 +4,10 @@ import { ArrowLink, ButtonLink } from "@/components/ui/button-link";
 import { Container, FactsRow, IndexedSection, RuledRow, SectionIndex } from "@/components/ui/layout";
 import { focusAreas } from "@/content/catalog";
 import { companyStatement, workStatements } from "@/content/company";
-import { featuredProducts, productPath, type Product } from "@/content/products";
+import { ProductLedger } from "@/components/product-ledger";
+import { featuredProducts, productPath, products, type Product } from "@/content/products";
 import { site } from "@/content/site";
-import { latestRelease, updates } from "@/content/updates";
+import { updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -16,19 +17,37 @@ export const metadata = pageMetadata({
   absoluteTitle: true,
 });
 
-/** Where each "How we work" statement points, resolved from the lead product's record. */
-function evidenceLink(product: Product | undefined, kind: (typeof workStatements)[number]["link"]) {
-  if (!product) return null;
-  if (kind === "demo") return product.demoUrl ? { href: product.demoUrl, label: "Open the demo", external: true } : null;
-  if (kind === "not-included") return { href: `${productPath(product)}#not-included`, label: `${product.name}’s list`, external: false };
-  const release = latestRelease(product.slug);
-  return release ? { href: `/updates/${release.slug}`, label: "Release notes", external: false } : null;
+/** Products listed under the lead product on the home page; the rest are one click away on /products. */
+const MORE_PRODUCTS_LIMIT = 4;
+/** Releases shown on the home page; the full log is on /updates. */
+const UPDATES_LIMIT = 3;
+
+/**
+ * Where each "How we work" statement points. With one product the links go
+ * straight to its demo, scope and release notes; with more, to the pages that
+ * list them all, so the home page never favours one product by accident.
+ */
+function evidenceLink(lead: Product | undefined, single: boolean, kind: (typeof workStatements)[number]["link"]) {
+  if (kind === "release-notes") return { href: "/updates", label: "Release notes", external: false };
+  if (kind === "scope") {
+    return single && lead
+      ? { href: `${productPath(lead)}#not-included`, label: `${lead.name}’s scope`, external: false }
+      : { href: "/products", label: "Product pages", external: false };
+  }
+  if (single && lead?.demoUrl) return { href: lead.demoUrl, label: "Open the demo", external: true };
+  return products.some((p) => p.demoUrl) ? { href: "/developers", label: "Live demos", external: false } : null;
 }
 
 export default function HomePage() {
   const [lead] = featuredProducts();
   const showcase = lead?.showcase;
-  const latestUpdates = updates.slice(0, 3);
+  const single = products.length === 1;
+  // Featured products first (registry order already puts them there), then the rest.
+  const moreProducts = products.filter((p) => p !== lead);
+  const latestUpdates = updates.slice(0, UPDATES_LIMIT);
+  // Section numbers follow the sections actually shown, so nothing skips a number.
+  let n = 0;
+  const next = () => String(++n).padStart(2, "0");
 
   return (
     <>
@@ -44,13 +63,21 @@ export default function HomePage() {
             {companyStatement.headline[1]}
           </h1>
           <div className="mt-8 grid gap-8 sm:mt-10 lg:grid-cols-12 lg:items-end lg:gap-x-8">
-            <p className="type-lead max-w-[38rem] lg:col-span-7">{companyStatement.lead}</p>
+            <p className="type-lead max-w-[38rem] lg:col-span-7">
+              {companyStatement.lead}
+              {single && lead?.pitch ? (
+                <>
+                  {" "}
+                  Our first release is {lead.name}, {lead.pitch}.
+                </>
+              ) : null}
+            </p>
             {lead ? (
               <div className="flex flex-col items-start gap-5 xs:flex-row xs:items-center xs:gap-6 lg:col-span-5 lg:justify-end">
-                <ButtonLink href={productPath(lead)} size="lg">
-                  Explore {lead.name}
+                <ButtonLink href={single ? productPath(lead) : "/products"} size="lg">
+                  {single ? `Explore ${lead.name}` : "Explore products"}
                 </ButtonLink>
-                {lead.demoUrl ? (
+                {single && lead.demoUrl ? (
                   <ArrowLink href={lead.demoUrl} newTab>
                     Open the live demo
                   </ArrowLink>
@@ -74,7 +101,7 @@ export default function HomePage() {
 
       {/* 01 Lead product */}
       {lead && showcase ? (
-        <IndexedSection id="product" index="01" label={lead.name} title={showcase.title} intro={<p>{showcase.lead}</p>} rule={false}>
+        <IndexedSection id="product" index={next()} label={lead.name} title={showcase.title} intro={<p>{showcase.lead}</p>} rule={false}>
           <FactsRow
             className="mt-10"
             items={[
@@ -100,8 +127,20 @@ export default function HomePage() {
         </IndexedSection>
       ) : null}
 
-      {/* 02 What we work on */}
-      <IndexedSection id="work" index="02" label="What we work on" title="Business operations, and the code behind them.">
+      {/* Further products: a compact index, capped, so the page stays the same length at 5 or 50 products */}
+      {moreProducts.length ? (
+        <IndexedSection id="more-products" index={next()} label="Products" title={`More from ${site.name}.`}>
+          <ProductLedger className="mt-10" items={moreProducts.slice(0, MORE_PRODUCTS_LIMIT)} />
+          <p className="mt-8">
+            <ArrowLink href="/products" tone="accent">
+              {`All ${products.length} products`}
+            </ArrowLink>
+          </p>
+        </IndexedSection>
+      ) : null}
+
+      {/* What we work on */}
+      <IndexedSection id="work" index={next()} label="What we work on" title="The areas we work in today.">
         <div className="mt-10 border-t border-line">
           {focusAreas.map((area) => (
             <RuledRow key={area.id} title={area.title}>
@@ -111,11 +150,11 @@ export default function HomePage() {
         </div>
       </IndexedSection>
 
-      {/* 03 How we work */}
-      <IndexedSection id="how" index="03" label="How we work" title="You can check everything before you pay.">
+      {/* How we work */}
+      <IndexedSection id="how" index={next()} label="How we work" title="You can check everything before you pay.">
         <ul className="mt-10 border-t border-line">
           {workStatements.map((s) => {
-            const link = evidenceLink(lead, s.link);
+            const link = evidenceLink(lead, single, s.link);
             return (
               <li key={s.link} className="flex flex-col gap-1.5 border-b border-line py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
                 <span className="text-ink">{s.body}</span>
@@ -130,8 +169,8 @@ export default function HomePage() {
         </ul>
       </IndexedSection>
 
-      {/* 04 Releases + contact */}
-      <IndexedSection id="releases" index="04" label="Releases" hideTitle>
+      {/* Releases + contact */}
+      <IndexedSection id="releases" index={next()} label="Releases" hideTitle>
         {latestUpdates.length ? (
           <ul className="border-t border-line">
             {latestUpdates.map((u) => (
@@ -156,6 +195,13 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
+        ) : null}
+        {updates.length > UPDATES_LIMIT ? (
+          <p className="mt-6">
+            <ArrowLink href="/updates" tone="accent">
+              {`All ${updates.length} updates`}
+            </ArrowLink>
+          </p>
         ) : null}
         <p className="mt-14 max-w-[36ch] text-[1.375rem] leading-snug tracking-[-0.015em] text-ink sm:text-[1.5rem]">
           Questions about a product, licensing or an order?{" "}

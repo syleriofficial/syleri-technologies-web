@@ -10,25 +10,31 @@ export function ProductLedger({
   items,
   limit,
   compact = false,
+  hideCategory = false,
   className = "",
 }: {
   items: Product[];
   limit?: number;
   /** Product and status only, for narrow placements. */
   compact?: boolean;
+  /** Drop the category column (inside a category section, where it repeats). */
+  hideCategory?: boolean;
   className?: string;
 }) {
   const shown = limit ? items.slice(0, limit) : items;
   const hidden = items.length - shown.length;
+  const showCategory = !compact && !hideCategory;
   const cols = compact
     ? "md:grid-cols-[minmax(0,1fr)_8rem]"
-    : "md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_6rem_8rem]";
+    : showCategory
+      ? "md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_6rem_8rem]"
+      : "md:grid-cols-[minmax(0,1fr)_6rem_8rem]";
 
   return (
     <div className={className}>
       <div className={`type-label hidden gap-6 border-b border-line pb-3 text-[0.75rem] md:grid ${cols}`} aria-hidden="true">
         <span>Product</span>
-        {compact ? null : <span>Category</span>}
+        {showCategory ? <span>Category</span> : null}
         {compact ? null : <span>Version</span>}
         <span>Status</span>
       </div>
@@ -48,10 +54,12 @@ export function ProductLedger({
                 </span>
                 {compact ? null : (
                   <>
-                    <span className="text-[0.9375rem] text-ink-soft">
-                      <span className="text-muted md:hidden">Category: </span>
-                      {categoryName(p.category)}
-                    </span>
+                    {showCategory ? (
+                      <span className="text-[0.9375rem] text-ink-soft">
+                        <span className="text-muted md:hidden">Category: </span>
+                        {categoryName(p.category)}
+                      </span>
+                    ) : null}
                     <span className="font-mono text-[0.875rem] text-ink-soft">
                       <span className="font-sans text-muted md:hidden">Version: </span>
                       {p.version}
