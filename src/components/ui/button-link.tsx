@@ -5,7 +5,7 @@ type Variant = "primary" | "secondary" | "quiet";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[0.625rem] font-[560] tracking-[-0.01em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-3";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium tracking-[-0.005em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-3";
 
 const variants: Record<Variant, string> = {
   primary: "bg-accent text-on-accent hover:bg-accent-hover",
@@ -15,7 +15,7 @@ const variants: Record<Variant, string> = {
 
 const sizes: Record<Size, string> = {
   md: "h-10 px-4 text-[0.9375rem]",
-  lg: "h-12 px-5 text-base",
+  lg: "h-12 px-[1.375rem] text-base",
 };
 
 export function isExternal(href: string) {
@@ -93,6 +93,47 @@ export function TextLink({
   return (
     <Link href={href} className={cls}>
       {children}
+    </Link>
+  );
+}
+
+/**
+ * A secondary action written as a sentence with an arrow ("Open the live
+ * demo →"). Sits beside a primary button instead of a second boxed button.
+ */
+export function ArrowLink({
+  href,
+  children,
+  className = "",
+  newTab,
+  tone = "ink",
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  newTab?: boolean;
+  tone?: "ink" | "accent";
+}) {
+  const color = tone === "accent" ? "text-accent hover:text-accent-hover" : "text-ink hover:text-accent";
+  const cls = `group inline-flex items-baseline gap-1.5 font-medium transition-colors ${color} ${className}`;
+  const arrow = (
+    <span aria-hidden="true" className="transition-transform duration-150 group-hover:translate-x-0.5">
+      {newTab ? "↗" : "→"}
+    </span>
+  );
+  if (isExternal(href)) {
+    return (
+      <a href={href} className={cls} rel={newTab ? "noopener noreferrer" : "noopener"} target={newTab ? "_blank" : undefined}>
+        {children}
+        {arrow}
+        {newTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={cls}>
+      {children}
+      {arrow}
     </Link>
   );
 }

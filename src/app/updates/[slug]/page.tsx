@@ -6,7 +6,7 @@ import { TextLink } from "@/components/ui/button-link";
 import { Container } from "@/components/ui/layout";
 import { getProduct, productPath } from "@/content/products";
 import { site } from "@/content/site";
-import { formatDate, getUpdate, updateKindLabel, updates } from "@/content/updates";
+import { getUpdate, updateKindLabel, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
 import { breadcrumbSchema } from "@/lib/schema";
 
@@ -62,27 +62,27 @@ export default async function UpdatePage({ params }: Props) {
         ]}
       />
       <Container className="pb-24 pt-12 sm:pt-20">
-        <nav aria-label="Breadcrumb" className="text-[0.875rem] text-muted">
-          <ol className="flex flex-wrap items-center gap-1.5">
+        <nav aria-label="Breadcrumb" className="type-label">
+          <ol className="flex flex-wrap items-center gap-2">
             <li>
               <TextLink href="/updates" className="text-muted">
                 Updates
               </TextLink>
             </li>
             <li aria-hidden="true">/</li>
-            <li aria-current="page" className="text-ink-soft">
+            <li aria-current="page" className="text-ink">
               {u.title}
             </li>
           </ol>
         </nav>
 
         <article className="mt-8 max-w-[44rem]">
-          <p className="text-[0.9375rem] text-muted">
+          <p className="type-label">
             {updateKindLabel[u.kind]}
             {u.date ? (
               <>
-                {", "}
-                <time dateTime={u.date}>{formatDate(u.date)}</time>
+                {" · "}
+                <time dateTime={u.date}>{u.date}</time>
               </>
             ) : null}
           </p>

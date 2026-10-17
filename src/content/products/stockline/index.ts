@@ -7,6 +7,7 @@ export const stockline: Product = {
   category: "developer-tools",
   kind: "Frontend starter kit",
   subtitle: "POS & Inventory Management Dashboard for Next.js",
+  pitch: "a Next.js POS and inventory dashboard starter kit, with working interface screens you can explore before buying",
   summary:
     "A production-quality frontend starter kit for building retail, inventory, warehouse, purchasing, sales and operational software.",
   version: "1.0.0",
@@ -16,6 +17,7 @@ export const stockline: Product = {
   areas: ["business-operations", "developer-tools"],
   forDevelopers: true,
   technology: ["Next.js 16", "React", "TypeScript", "Tailwind CSS", "Radix UI", "Recharts", "Lucide"],
+  stackSummary: "Next.js 16 · TypeScript",
   demoUrl: "https://stockline-demo.vercel.app/",
   checkoutUrl: "https://syleri-technologies.lemonsqueezy.com/checkout/buy/58a0a32e-641c-4e39-869b-2a687c791ccb",
   price: {
@@ -35,14 +37,12 @@ export const stockline: Product = {
   },
   cover: stocklineMedia.pos,
   showcase: {
-    lead: "A production-quality frontend for building retail, inventory, warehouse, purchasing and sales software, ready to connect to your own backend.",
+    title: "Every screen of a POS and inventory app, ready for your backend.",
+    lead: "Point of sale, dashboard, products, inventory, warehouses, purchasing, sales, reports, customers, roles and settings — built in Next.js and TypeScript, with light and dark themes. Open each one in the live demo before you buy.",
     image: stocklineMedia.dashboard,
-    imageDark: stocklineMedia.dark,
-    points: [
-      { title: "Point of sale", body: "A terminal screen for building a cart and working through a sale." },
-      { title: "Inventory and warehouses", body: "Stock levels, adjustments and transfers across locations." },
-      { title: "Reports", body: "Sales and profit trends, with charts ready for real data." },
-    ],
+    figure: stocklineMedia.dashboardCards,
+    figureDark: stocklineMedia.dashboardCardsDark,
+    caption: "Dashboard · today’s figures across every store",
   },
   seo: {
     title: "Stockline — POS & Inventory Management Next.js Dashboard",

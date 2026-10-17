@@ -9,7 +9,7 @@ import { Container } from "./ui/layout";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
-      <Container className="flex h-16 items-center justify-between gap-6">
+      <Container className="flex h-16 items-center gap-6">
         <Link href="/" className="-mx-1 flex shrink-0 items-center rounded px-1" aria-label="Syleri Technologies home">
           {/* Full lockup at every width from 360px up; the symbol alone only on very narrow screens. */}
           <span className="hidden min-[22.5rem]:block">
@@ -20,21 +20,22 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:block">
+        <nav aria-label="Primary" className="ml-auto hidden md:block">
           <DesktopNav items={primaryNav} />
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <ThemeToggle />
+        <div className="hidden items-center gap-3 md:flex">
+          <span aria-hidden="true" className="h-5 w-px bg-line" />
           <Link
             href={contactNav.href}
-            className="inline-flex h-10 items-center rounded-[0.625rem] border border-line-strong px-4 text-[0.9375rem] font-[560] text-ink transition-colors hover:border-ink"
+            className="inline-flex h-10 items-center px-1.5 text-[0.9375rem] font-medium text-ink transition-colors hover:text-accent"
           >
             {contactNav.label}
           </Link>
+          <ThemeToggle />
         </div>
 
-        <div className="md:hidden">
+        <div className="ml-auto md:hidden">
           <MobileMenu items={primaryNav} contact={contactNav} />
         </div>
       </Container>

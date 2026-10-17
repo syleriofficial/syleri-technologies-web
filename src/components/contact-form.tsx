@@ -8,7 +8,7 @@ import { HONEYPOT_FIELD_NAME, type ContactFields, type ContactFormState } from "
 const initialState: ContactFormState = { status: "idle" };
 
 const inputClass =
-  "w-full rounded-[0.625rem] border bg-bg px-3.5 py-2.5 text-[0.9375rem] text-ink placeholder:text-muted disabled:opacity-60";
+  "w-full rounded-md border bg-bg px-3.5 py-2.5 text-[0.9375rem] text-ink placeholder:text-muted disabled:opacity-60";
 
 function fieldBorder(hasError: boolean) {
   return hasError ? "border-notice-line" : "border-line";
@@ -21,7 +21,7 @@ function SubmitButton() {
       type="submit"
       disabled={pending}
       aria-disabled={pending}
-      className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-[0.625rem] bg-accent px-5 text-base font-[560] tracking-[-0.01em] text-on-accent transition-colors duration-150 hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-3 disabled:cursor-not-allowed disabled:opacity-70"
+      className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-accent px-5 text-base font-medium tracking-[-0.01em] text-on-accent transition-colors duration-150 hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-3 disabled:cursor-not-allowed disabled:opacity-70"
     >
       {pending ? (
         <>
@@ -59,7 +59,7 @@ function Field({
   const errorId = `${id}-error`;
   return (
     <div>
-      <label htmlFor={id} className="block text-[0.9375rem] font-[560] text-ink">
+      <label htmlFor={id} className="block text-[0.9375rem] font-medium text-ink">
         {label}
       </label>
       <input
@@ -88,7 +88,7 @@ function MessageField({ error, defaultValue }: { error?: string; defaultValue?: 
   const errorId = `${id}-error`;
   return (
     <div>
-      <label htmlFor={id} className="block text-[0.9375rem] font-[560] text-ink">
+      <label htmlFor={id} className="block text-[0.9375rem] font-medium text-ink">
         Message
       </label>
       <textarea
@@ -142,8 +142,8 @@ export function ContactForm() {
     // the change is announced by screen readers.
     <div aria-live="polite">
       {state.status === "success" ? (
-        <div role="status" className="rounded-xl border border-line-strong bg-surface px-5 py-5 text-ink-soft">
-          <h3 ref={successRef} tabIndex={-1} className="text-[1.0625rem] font-[620] text-ink focus:outline-none">
+        <div role="status" className="rounded-md border border-line-strong bg-surface px-5 py-5 text-ink-soft">
+          <h3 ref={successRef} tabIndex={-1} className="text-[1.0625rem] font-semibold text-ink focus:outline-none">
             Message sent
           </h3>
           <p className="mt-1.5 text-[0.9375rem] leading-relaxed">{state.message}</p>
@@ -160,7 +160,7 @@ export function ContactForm() {
           className="space-y-5"
         >
           {state.status === "error" && state.message && !hasFieldErrors ? (
-            <p role="alert" className="rounded-xl border border-notice-line bg-notice px-5 py-4 text-[0.9375rem] text-notice-ink">
+            <p role="alert" className="rounded-md border border-notice-line bg-notice px-5 py-4 text-[0.9375rem] text-notice-ink">
               {state.message}
             </p>
           ) : null}

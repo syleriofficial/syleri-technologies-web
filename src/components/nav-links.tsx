@@ -19,8 +19,8 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`relative inline-flex h-10 items-center rounded-[0.625rem] px-2.5 lg:px-3 text-[0.9375rem] transition-colors hover:text-ink ${
-                active ? "font-[580] text-ink" : "text-muted"
+              className={`relative inline-flex h-10 items-center rounded-md px-2.5 text-[0.9375rem] transition-colors hover:text-ink lg:px-3 ${
+                active ? "font-medium text-ink" : "text-ink-soft"
               }`}
             >
               {item.label}

@@ -18,13 +18,14 @@ export const myProduct: Product = {
   category: "developer-tools",     // an id from src/content/catalog.ts
   kind: "Web application",         // what form it takes: app, starter kit, library, API…
   subtitle: "One-line positioning statement",
+  pitch: "a … that …",              // optional: completes "Our first release is <name>, …" on the home page while it is the only product
   summary: "One or two factual sentences about what it is.",
   version: "1.0.0",
   status: "available",             // "available" | "in-development" | "retired"
   page: "template",                // "template" or "custom" (see step 3)
   featured: false,                 // true = highlighted on home + top of its category
   areas: ["business-operations"],  // ids from focusAreas in catalog.ts
-  forDevelopers: false,            // true = listed in /developers and footer demos
+  forDevelopers: false,            // true = listed in /developers with its demo and docs
 
   // Optional — include only what is real:
   technology: ["TypeScript"],      // shown for developer-facing products
@@ -34,7 +35,8 @@ export const myProduct: Product = {
   price: { currency: "USD", amount: 29, label: "$29", offerName: "My Product License" },
   license: { name: "Standard License", summary: "One end product." },
   docs: { url: "https://…", note: "" },
-  cover: { src: "/products/my-product/cover.png", alt: "…", brief: "…" },
+  cover: { src: "/products/my-product/cover.png", alt: "…", brief: "…", width: 2880, height: 1800 },
+  // Optional on any media: mobile: { …a readable crop of the same real screen for phones… }
 
   seo: { title: "My Product — …", description: "…" },
   schema: { category: "…", description: "…" },
@@ -70,8 +72,9 @@ Add it once to `src/content/catalog.ts`. Categories only appear on
 
 ## 5. Announce it
 
-Add a release entry to the top of `src/content/updates.ts` with
-`productSlug` set. Product page and demo links are attached automatically.
+Add a release entry to `src/content/updates.ts` with `productSlug` set.
+Entries are shown newest first by date, wherever you add them. Product page
+and demo links are attached automatically.
 
 ## Build-time checks
 
@@ -82,21 +85,27 @@ custom page exists.
 
 ## How the layout scales
 
+Tested with 1, 5, 10, 20 and 50 products across six categories.
+
 | Products | Home | /products |
 |----------|------|-----------|
-| 1–2 | Company hero lists available products; one featured panel | Category section(s) with featured panel; no directory table |
-| 3+ | Hero lists first 3 "and N more"; extra featured products as cards | Adds counts and a directory table (desktop); category jump links when 2+ categories |
-| Many | One lead panel + up to 2 featured cards | Featured products as panels, the rest as compact rows per category |
+| 1 | Hero names the product (from `pitch`) and links to it and its demo; the lead product's screen, facts and figure | One entry with screenshot; no category headings |
+| 2+ | Hero says "Explore products"; the lead (first featured) product keeps its section; a "More from Syleri Technologies" index lists up to 4 others, then "All N products" | Category headings and a jump list (with counts) once there are 2+ categories |
+| Many | Same length as at 2: one lead section, at most 4 index rows, 3 latest releases and "All N updates" | Up to 2 featured entries per category with screenshots; up to 6 more as full rows; beyond that, a compact ruled index per category |
 
-The footer lists up to 6 products (then "All products") and up to 3 demos.
-Retired products are hidden from listings but their records remain for
-old update links.
+Section numbers on the home page follow the sections actually shown. The
+"How we work" links point at the single product while there is one, and at
+/products, /developers and /updates once there are more.
+
+The footer lists up to 3 product names next to "Products". Demos and
+documentation for every developer product are on `/developers`, which adds a
+jump list once there are 2+ developer products. Retired products are hidden
+from listings but their records remain for old update links.
 
 ## Where purchase buttons appear
 
-Purchase buttons appear only in product cards on `/products` and on the
-product's own page — never in the home page hero or home page product
-cards, which lead to the product page instead.
+Purchase buttons appear only on `/products` and on the product's own page,
+never on the home page, which leads to the product page instead.
 
 Do not add placeholder or future products to fill space — only real
 products belong in the registry. Products are not limited to developer

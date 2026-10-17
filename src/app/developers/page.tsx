@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { ExternalIcon } from "@/components/ui/button-link";
-import { Container, Section, SectionHeading } from "@/components/ui/layout";
+import { Container, IndexedSection } from "@/components/ui/layout";
 import { developerProducts, productPath, type Product } from "@/content/products";
 import { latestRelease, updates } from "@/content/updates";
 import { pageMetadata } from "@/lib/metadata";
@@ -47,30 +46,41 @@ function resourcesFor(p: Product): Resource[] {
   return list;
 }
 
-function ResourceItem({ r }: { r: Resource }) {
-  const inner = (
+function ResourceRow({ r }: { r: Resource }) {
+  const title = (
+    <span className="inline-flex items-baseline gap-1.5 text-[1.0625rem] font-semibold tracking-[-0.01em] text-ink group-hover:text-accent">
+      {r.title}
+      {r.href ? <span aria-hidden="true" className="font-medium text-accent">{r.external ? "↗" : "→"}</span> : null}
+    </span>
+  );
+  const body = (
     <>
-      <span className="flex items-center gap-2 text-[1.0625rem] font-[620] tracking-[-0.01em] text-ink group-hover:text-accent">
-        {r.title}
-        {r.external ? <ExternalIcon className="size-3.5 text-muted" /> : null}
-      </span>
-      <span className="mt-1 block text-[0.9375rem] leading-relaxed text-muted">{r.description}</span>
-      {r.note ? <span className="mt-3 block text-[0.875rem] text-ink-soft">{r.note}</span> : null}
+      <span className="text-ink-soft">{r.description}</span>
+      <span className="type-label md:text-right">{r.note ?? (r.external ? "Opens in a new tab" : "")}</span>
     </>
   );
-
-  if (!r.href) return <div className="h-full bg-raised p-6">{inner}</div>;
+  const cls = "group grid gap-1 py-5 md:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,3fr)] md:items-baseline md:gap-8";
+  if (!r.href) {
+    return (
+      <div className={cls}>
+        {title}
+        {body}
+      </div>
+    );
+  }
   if (r.external) {
     return (
-      <a href={r.href} target="_blank" rel="noopener noreferrer" className="group block h-full bg-raised p-6 transition-colors hover:bg-surface">
-        {inner}
+      <a href={r.href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {title}
+        {body}
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
     );
   }
   return (
-    <Link href={r.href} className="group block h-full bg-raised p-6 transition-colors hover:bg-surface">
-      {inner}
+    <Link href={r.href} className={cls}>
+      {title}
+      {body}
     </Link>
   );
 }
@@ -87,24 +97,20 @@ export default function DevelopersPage() {
           { name: "Developers", path: "/developers" },
         ])}
       />
-      <section aria-labelledby="dev-title" className="border-b border-line">
-        <Container className="pb-16 pt-14 sm:pb-20 sm:pt-20">
+      <section aria-labelledby="dev-title">
+        <Container className="pb-12 pt-14 sm:pb-16 sm:pt-20">
           <h1 id="dev-title" className="type-title">
             Developers
           </h1>
-          <p className="type-lead mt-5 max-w-[52ch]">
-            Documentation, demos, technical resources and release information for Syleri Technologies developer
-            products.
+          <p className="type-lead mt-5 max-w-[48ch]">
+            Documentation, demos and release notes for Syleri Technologies developer products.
           </p>
           {devProducts.length > 1 ? (
             <nav aria-label="Developer products" className="mt-10">
-              <ul className="flex flex-wrap gap-2">
+              <ul className="flex flex-wrap gap-x-6 border-y border-line py-1">
                 {devProducts.map((p) => (
                   <li key={p.slug}>
-                    <a
-                      href={`#res-${p.slug}`}
-                      className="inline-flex h-9 items-center rounded-lg border border-line px-3 text-[0.9375rem] text-ink-soft hover:border-line-strong hover:text-ink"
-                    >
+                    <a href={`#res-${p.slug}`} className="inline-flex min-h-11 items-center text-[0.9375rem] text-ink-soft hover:text-accent">
                       {p.name}
                     </a>
                   </li>
@@ -116,60 +122,55 @@ export default function DevelopersPage() {
       </section>
 
       {devProducts.length === 0 ? (
-        <Container className="py-20">
+        <Container className="pb-20">
           <p className="type-lead">Developer resources will be published here as products are released.</p>
         </Container>
       ) : null}
 
-      {devProducts.map((p, i) => {
-        const id = `res-${p.slug}`;
-        return (
-          <Section key={p.slug} id={id} labelledBy={`${id}-title`} tone={i % 2 === 1 ? "surface" : "base"} className="scroll-mt-20">
-            <Container>
-              <SectionHeading id={`${id}-title`} title={p.name} intro={`${p.subtitle}. Resources for version ${p.version}.`} />
-              <ul className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2">
-                {resourcesFor(p).map((r) => (
-                  <li key={r.title}>
-                    <ResourceItem r={r} />
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </Section>
-        );
-      })}
+      {devProducts.map((p, i) => (
+        <IndexedSection
+          key={p.slug}
+          id={`res-${p.slug}`}
+          index={String(i + 1).padStart(2, "0")}
+          label={p.name}
+          title={p.name}
+          intro={
+            <p>
+              {p.subtitle}. Resources for version <span className="font-mono text-[0.9375rem]">{p.version}</span>.
+            </p>
+          }
+        >
+          <ul className="mt-10 border-t border-line">
+            {resourcesFor(p).map((r) => (
+              <li key={r.title} className="border-b border-line">
+                <ResourceRow r={r} />
+              </li>
+            ))}
+          </ul>
+        </IndexedSection>
+      ))}
 
       {releases.length ? (
-        <Section labelledBy="releases-title" tone="surface">
-          <Container className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-            <SectionHeading
-              id="releases-title"
-              title="Release information"
-              intro="Every product release is recorded on the updates page with notes on what changed."
-            />
-            <ul className="border-t border-line">
-              {releases.slice(0, 8).map((u) => (
-                <li key={u.slug} className="border-b border-line">
-                  <Link href={`/updates/${u.slug}`} className="group block py-5">
-                    <span className="block font-[620] group-hover:text-accent">{u.title}</span>
-                    <span className="mt-1 block text-[0.9375rem] text-muted">{u.summary}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </Section>
+        <IndexedSection id="releases" index={String(devProducts.length + 1).padStart(2, "0")} label="Releases" title="Release notes">
+          <ul className="mt-10 border-t border-line">
+            {releases.slice(0, 8).map((u) => (
+              <li key={u.slug} className="border-b border-line">
+                <Link href={`/updates/${u.slug}`} className="group grid gap-1 py-5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-6">
+                  <span className="font-mono text-[0.875rem] text-muted">{u.date ?? "Date to be confirmed"}</span>
+                  <span>
+                    <span className="block font-mono text-[0.9375rem] text-ink group-hover:text-accent">{u.title}</span>
+                    <span className="mt-1 block text-ink-soft">{u.summary}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-10 max-w-[62ch] text-ink-soft">
+            Syleri Technologies does not offer public APIs or SDKs at this time. When that changes, their documentation will
+            be published here.
+          </p>
+        </IndexedSection>
       ) : null}
-
-      <Section labelledBy="api-title">
-        <Container>
-          <SectionHeading
-            id="api-title"
-            title="APIs and SDKs"
-            intro="Syleri Technologies does not offer public APIs or SDKs at this time. When that changes, documentation will be published here."
-          />
-        </Container>
-      </Section>
     </>
   );
 }

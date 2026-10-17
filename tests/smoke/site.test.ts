@@ -93,6 +93,8 @@ describe("public pages", () => {
       for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
         assert.doesNotThrow(() => JSON.parse(block[1]!), "valid JSON-LD");
       }
+      // The site publishes no location or address; legal pages would need review before adding one.
+      assert.doesNotMatch(html, /\bIndia\b/, "no location in page source");
       assert.ok(!html.includes("mailto:"), "no mailto links");
       assert.ok(!EMAIL.test(html), "no email address in page source");
     });
@@ -155,6 +157,25 @@ describe("Stockline", () => {
     assert.ok(html.replaceAll("<!-- -->", "").includes("Get Stockline — $49"), "button price");
     assert.match(html, /frontend starter kit/i, "frontend-only positioning");
     assert.match(html, /does not include a backend, database or payment processing/, "disclosure");
+    assert.match(html, /id="not-included"/, "not-included section");
+    assert.match(html, /Production backend/, "production backend listed as not included");
+    const checkoutLinks = html.split(`href="${product.offers.url}"`).length - 1;
+    assert.equal(checkoutLinks, 2, "checkout button in the hero and the price section only");
+    for (const id of ["pos", "modules", "frontend-only", "pricing", "license", "faq"]) {
+      assert.match(html, new RegExp(`id="${id}"`), `in-page link #${id} still resolves`);
+    }
+  });
+});
+
+describe("home page", () => {
+  it("leads with the approved headline and links to the lead product", async () => {
+    const html = (await (await fetch(base + "/")).text()).replaceAll("<!-- -->", "");
+    assert.match(html, /<h1[^>]*>Technology products,\s*(<br[^>]*>)?\s*built to be relied on\.<\/h1>/);
+    assert.match(html, /href="\/products\/stockline"/);
+    // With one product, the hero names it factually; the company line stays broad.
+    assert.match(html, /builds software, platforms and technology products/);
+    assert.match(html, /Our first release is Stockline, a Next\.js POS and inventory dashboard starter kit/);
+    assert.match(html, /href="\/updates"/, "release notes link");
   });
 });
 

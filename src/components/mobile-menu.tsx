@@ -39,7 +39,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
         onClick={open}
         aria-haspopup="dialog"
         aria-controls="mobile-menu"
-        className="inline-flex h-10 items-center gap-2 rounded-[0.625rem] border border-line px-3 text-[0.9375rem] font-[560] text-ink hover:border-line-strong"
+        className="inline-flex h-11 items-center gap-2 rounded-md border border-line px-3.5 text-[0.9375rem] font-medium text-ink hover:border-line-strong"
       >
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4">
           <path d="M3 6.5h14M3 13.5h14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -63,7 +63,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
             <button
               type="button"
               onClick={close}
-              className="inline-flex h-10 items-center gap-2 rounded-[0.625rem] border border-line px-3 text-[0.9375rem] font-[560]"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-line px-3 text-[0.9375rem] font-medium"
             >
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4">
                 <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -78,7 +78,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
                 <Link
                   href="/"
                   aria-current={pathname === "/" ? "page" : undefined}
-                  className="flex items-center justify-between border-b border-line py-4 text-[1.625rem] font-[620] tracking-[-0.025em] aria-[current=page]:text-accent"
+                  className="flex items-center justify-between border-b border-line py-4 text-[1.625rem] font-semibold tracking-[-0.025em] aria-[current=page]:text-accent"
                 >
                   Home
                 </Link>
@@ -88,7 +88,7 @@ export function MobileMenu({ items, contact }: { items: NavItem[]; contact: NavI
                   <Link
                     href={item.href}
                     aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                    className="flex items-center justify-between border-b border-line py-4 text-[1.625rem] font-[620] tracking-[-0.025em] aria-[current=page]:text-accent"
+                    className="flex items-center justify-between border-b border-line py-4 text-[1.625rem] font-semibold tracking-[-0.025em] aria-[current=page]:text-accent"
                   >
                     {item.label}
                   </Link>

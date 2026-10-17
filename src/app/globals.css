@@ -24,6 +24,13 @@
   --notice: #fff7e0;
   --notice-line: #e6cf86;
   --notice-ink: #5a4500;
+  /* The figure band: the logo's deep navy, used once per page behind the
+     main product screenshot. Its text colours are fixed for contrast. */
+  --band: #0b1a26;
+  --band-line: #26333a;
+  --band-ink: #c9d4d2;
+  --band-muted: #9aa9ae;
+  --band-accent: #71bcf6;
 }
 
 :root[data-theme="dark"] {
@@ -45,6 +52,8 @@
   --notice: #2a2412;
   --notice-line: #6b5a1f;
   --notice-ink: #f1dc9c;
+  --band: #0b1a26;
+  --band-line: #2a3a44;
 }
 
 @theme inline {
@@ -63,8 +72,15 @@
   --color-notice: var(--notice);
   --color-notice-line: var(--notice-line);
   --color-notice-ink: var(--notice-ink);
+  --color-band: var(--band);
+  --color-band-line: var(--band-line);
+  --color-band-ink: var(--band-ink);
+  --color-band-muted: var(--band-muted);
+  --color-band-accent: var(--band-accent);
 
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* IBM Plex Mono: versions, prices, dates, captions and section labels only. */
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --breakpoint-xs: 26rem;
 }
@@ -123,42 +139,51 @@
 }
 
 @layer components {
-  /* Display type scale — one family, carried by weight, size and tracking. */
+  /* Type scale. One family (Schibsted Grotesk), weights 400 / 500 / 600 only;
+     hierarchy comes from size and tracking. */
   .type-display {
-    font-size: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
+    font-size: clamp(2.5rem, 1.55rem + 4.1vw, 4.75rem);
     line-height: 1.02;
     letter-spacing: -0.035em;
-    font-weight: 680;
+    font-weight: 600;
   }
-  /* Product showcase name on the home page: one step below the hero. */
-  .type-showcase {
-    font-size: clamp(2.5rem, 1.75rem + 3.2vw, 3.75rem);
-    line-height: 1.04;
-    letter-spacing: -0.032em;
-    font-weight: 680;
+  /* A product name used as a page title (Stockline). */
+  .type-product {
+    font-size: clamp(3.5rem, 2rem + 6.4vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    font-weight: 600;
   }
   .type-title {
-    font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.25rem);
-    line-height: 1.06;
-    letter-spacing: -0.03em;
-    font-weight: 660;
+    font-size: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    font-weight: 600;
   }
   .type-h2 {
-    font-size: clamp(1.65rem, 1.3rem + 1.4vw, 2.375rem);
-    line-height: 1.12;
-    letter-spacing: -0.024em;
-    font-weight: 640;
+    font-size: clamp(1.875rem, 1.45rem + 1.8vw, 2.75rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 600;
   }
   .type-h3 {
     font-size: 1.25rem;
     line-height: 1.3;
-    letter-spacing: -0.012em;
-    font-weight: 620;
+    letter-spacing: -0.01em;
+    font-weight: 600;
   }
   .type-lead {
     font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
-    line-height: 1.55;
+    line-height: 1.5;
     color: var(--ink-soft);
+  }
+  /* Technical metadata: section numbers, captions, versions, dates, prices. */
+  .type-label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: var(--muted);
   }
 
   /* Long-form legal / update copy. */
@@ -170,7 +195,7 @@
     font-size: 1.375rem;
     line-height: 1.3;
     letter-spacing: -0.015em;
-    font-weight: 640;
+    font-weight: 600;
     margin-top: 2.5rem;
     margin-bottom: 0.75rem;
     color: var(--ink);
@@ -205,28 +230,6 @@
   }
   .faq details[open] summary .faq-icon {
     transform: rotate(45deg);
-  }
-
-  /* The ledger: Syleri's signature catalog structure. */
-  .ledger-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.25rem 1.5rem;
-  }
-  .ledger-row-compact {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.25rem 1.5rem;
-  }
-  @media (min-width: 48rem) {
-    .ledger-row {
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 6rem 9rem;
-      align-items: baseline;
-    }
-    .ledger-row-compact {
-      grid-template-columns: minmax(0, 1fr) 9rem;
-      align-items: baseline;
-    }
   }
 }
 

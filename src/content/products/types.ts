@@ -15,20 +15,31 @@ export type ProductMedia = {
   /** Intrinsic pixel size. Lets large images reserve their space (no layout shift). */
   width?: number;
   height?: number;
+  /**
+   * A crop of the same real screen for narrow viewports (under 640px), so the
+   * interface stays readable on a phone instead of shrinking to fit.
+   */
+  mobile?: ProductMedia;
 };
 
 /**
- * Home page showcase for a featured product: one large real screenshot
- * (with an optional dark-theme counterpart) and up to three short,
- * factual capability notes.
+ * Home page section for the lead featured product: a factual heading, one or
+ * two sentences, and one real screenshot (with an optional dark-theme
+ * counterpart).
  */
 export type ProductShowcase = {
-  /** One or two factual sentences under the product's subtitle. */
+  /** Section heading, e.g. what the product gives you. */
+  title: string;
+  /** One or two factual sentences under the heading. */
   lead: string;
+  /** The full screenshot this section is about (also used in structured data). */
   image: ProductMedia;
-  /** Same view in the dark theme; shown when the site is in dark mode. */
-  imageDark?: ProductMedia;
-  points: { title: string; body: string }[];
+  /** What the home page shows: a readable crop of `image`, if different. */
+  figure?: ProductMedia;
+  /** Dark-theme counterpart of `figure` (or `image`); shown in dark mode. */
+  figureDark?: ProductMedia;
+  /** Caption shown above the screenshot. */
+  caption: string;
 };
 
 /**
@@ -49,6 +60,11 @@ export type Product = {
   kind: string;
   /** One-line positioning statement shown under the name. */
   subtitle: string;
+  /**
+   * Optional short factual phrase that completes "Our first release is
+   * <name>, …" on the home page while this is the only product.
+   */
+  pitch?: string;
   /** Short paragraph used on cards, rows and the template page. */
   summary: string;
   version: string;
@@ -69,6 +85,8 @@ export type Product = {
 
   /** Technologies the product is built with. Shown for developer-facing products; optional otherwise. */
   technology?: string[];
+  /** Short stack summary for fact rows, e.g. "Next.js 16 · TypeScript". */
+  stackSummary?: string;
   /**
    * Up to ~6 factual feature highlights. Rendered by the shared product
    * page template; custom pages may ignore them.
