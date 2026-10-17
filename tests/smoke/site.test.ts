@@ -170,7 +170,7 @@ describe("Stockline", () => {
 describe("home page", () => {
   it("leads with the approved headline and links to the lead product", async () => {
     const html = (await (await fetch(base + "/")).text()).replaceAll("<!-- -->", "");
-    assert.match(html, /<h1[^>]*>Start with the interface\.\s*(<br[^>]*>)?\s*Build the rest your way\.<\/h1>/);
+    assert.match(html, /<h1[^>]*>Technology products,\s*(<br[^>]*>)?\s*built to be relied on\.<\/h1>/);
     assert.match(html, /href="\/products\/stockline"/);
     // With one product, the hero names it factually; the company line stays broad.
     assert.match(html, /builds software, platforms and technology products/);

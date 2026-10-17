@@ -4,14 +4,14 @@
  */
 
 export const companyStatement = {
-  /** Home hero headline. Two sentences; the page breaks the line between them on wide screens. */
-  headline: ["Start with the interface.", "Build the rest your way."],
+  /** Home hero headline, in two parts; the page breaks the line between them on wide screens. */
+  headline: ["Technology products,", "built to be relied on."],
   /**
    * Home hero supporting copy: the company, in terms that hold as the catalog
    * grows. While there is a single product, the page adds one factual
    * sentence about it from its record (`pitch`).
    */
-  lead: "Syleri Technologies builds software, platforms and technology products, and releases each one when it is ready to be relied on.",
+  lead: "Syleri Technologies builds software, platforms and technology products, and releases each one only when it is ready.",
 };
 
 /**
